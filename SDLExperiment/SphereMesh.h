@@ -1,7 +1,6 @@
 #pragma once
 #include <gl/glew.h>
 #include <vector>
-#include <SDL2/SDL_stdinc.h>
 
 // from http://stackoverflow.com/questions/5988686/creating-a-3d-sphere-in-opengl-using-visual-c
 
