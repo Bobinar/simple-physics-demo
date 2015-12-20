@@ -1,0 +1,1 @@
+emcc main.cpp -o main.html -s USE_SDL=2 -IC:\Tools\glm
