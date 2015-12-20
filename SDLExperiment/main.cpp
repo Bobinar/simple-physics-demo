@@ -17,7 +17,6 @@
 #include "glm/gtc/matrix_transform.hpp" 
 #include "glm/gtc/constants.hpp" 
 #include <iostream>
-#include "Triangle.h"
 #include "SceneRenderer.h"
 
 bool gRenderQuad;
