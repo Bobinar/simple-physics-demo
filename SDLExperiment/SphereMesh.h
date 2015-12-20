@@ -3,6 +3,8 @@
 #include <vector>
 #include <SDL2/SDL_stdinc.h>
 
+// from http://stackoverflow.com/questions/5988686/creating-a-3d-sphere-in-opengl-using-visual-c
+
 inline void push_indices(std::vector<GLushort>& indices, int sectors, int r, int s) {
 	int curRow = r * sectors;
 	int nextRow = (r + 1) * sectors;
