@@ -38,7 +38,7 @@ namespace SceneShader
 		"   float distanceToLight= dot(distanceVector,distanceVector);\n"
 		"   float distanceAttenuation = clamp(1.0 - distanceToLight/6.0 , 0.0, 1.0);\n"
 		"   float lightDot = dot(normalize(distanceVector), normalize(worldNormal))/2.0 + 0.5;\n"
-		"   float visibility = texture(shadowMap, vec3(lightSpaceProjectedCoords.xy, (lightSpaceProjectedCoords.z) / lightSpaceProjectedCoords.w)); \n"
+		"   float visibility = texture(shadowMap, vec3(lightSpaceProjectedCoords.xy, (lightSpaceProjectedCoords.z) / lightSpaceProjectedCoords.w)*0.5 + 0.5); \n"
 		"	gl_FragColor = clamp(distanceAttenuation * lightDot +0.15,0.0,1.0)  * vec4 (1.0, 1.0, 1.0, 1.0 ) * visibility;\n"
 		"}                                            \n";
 }
