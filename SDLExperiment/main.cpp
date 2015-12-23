@@ -75,8 +75,8 @@ int main(int argc, char *argv[])
 
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1); // *new*
 
-	GLuint esContextWidth = 640;
-	GLuint esContextHeight = 480;
+	GLuint esContextWidth = 800;
+	GLuint esContextHeight = 800;
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
 

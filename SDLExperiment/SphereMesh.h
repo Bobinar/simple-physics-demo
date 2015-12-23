@@ -58,7 +58,7 @@ public:
 		createSphere(vertices, indices, normals, texcoords, radius, rings, sectors);
 
 		// HACK! correct out of bounds indices! 
-		// TODO: replace sphere creation code instead of this
+		// TODO: replace sphere creation code instead of doing this
 		for (unsigned int i = 0; i < indices.size(); i++)
 		{
 			if (indices[i] >= vertices.size())
@@ -88,10 +88,9 @@ public:
 
 	void Draw() const
 	{
-		// need to do something like this
-
+		// TODO: need to do something like this
 		// GLuint positionID = glGetAttribLocation(programID, "position_modelspace");
-		//GLuint uvID = glGetAttribLocation(programID, "uv");
+		// GLuint uvID = glGetAttribLocation(programID, "uv");
 
 		glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
 		glVertexAttribPointer(0, 3, GL_FLOAT, 0, 0, 0);
