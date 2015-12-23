@@ -15,15 +15,16 @@
 class SceneRenderer
 {
 private:
-	GLuint m_width, m_height;
-	Shader m_sceneShader;
-	Shader m_depthShader;
+	const GLuint m_width, m_height;
+	const Shader m_sceneShader;
+	const Shader m_depthShader;
 	const glm::mat4 m_viewMatrix, m_projectionMatrix;
 	Quad m_quad;
 	Ball m_sphere;
-	glm::vec3 m_lightPosition;
+	const glm::vec3 m_lightPosition;
 	GLuint m_depthTexture;
 	GLuint m_shadowMapFramebufferName;
+	glm::mat4 m_lightSpaceViewProjectionMatrix;
 public:
 
 	SceneRenderer(GLuint width, GLuint height)
@@ -33,22 +34,17 @@ public:
 		, m_depthShader(ShadowMapShader::vShaderStr, ShadowMapShader::fShaderStr)
 		, m_viewMatrix(glm::lookAt(glm::vec3(0, 3, 5.f), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)))
 		, m_projectionMatrix(glm::perspective<float>(glm::pi<float>() * 0.25f,((float) m_width )/ m_height, 0.1f, 100.f))
-		, m_sphere(glm::vec3(0.0f, 2.0f, 1.0f), 0.1f,20,20)
+		, m_sphere(glm::vec3(0.0f, 2.0f, 0.2f), 0.1f,20,20)
 		, m_lightPosition(0.25f, 1.5f, 1.0f)
 	{
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-		// Enable depth test
 		glEnable(GL_DEPTH_TEST);
-		// Accept fragment if it closer to the camera than the former one
 		glDepthFunc(GL_LESS);
 		glEnable(GL_CULL_FACE);
 
-		// The framebuffer, which regroups 0, 1, or more textures, and 0 or 1 depth buffer.
-		
 		glGenFramebuffers(1, &m_shadowMapFramebufferName);
-		
+	
 		// Depth texture. Slower than a depth buffer, but you can sample it later in your shader
-		
 		glGenTextures(1, &m_depthTexture);
 		glBindTexture(GL_TEXTURE_2D, m_depthTexture);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, 1024, 1024, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
@@ -56,22 +52,30 @@ public:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+		glm::mat4 depthProjectionMatrix = glm::perspective<float>(45.0f, 1.0f, 0.5f, 5.0f);
+		glm::mat4 depthViewMatrix = glm::lookAt(m_lightPosition, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+
+		m_lightSpaceViewProjectionMatrix = depthProjectionMatrix * depthViewMatrix;
 	}
 
 	void DrawSphere(const Shader &shader, glm::mat4 modelMatrix) const
 	{
 		glm::mat4 MV = m_viewMatrix * modelMatrix;
 		glm::mat4 MVP = m_projectionMatrix * MV;
+		glm::mat4 lightMVP = m_lightSpaceViewProjectionMatrix * modelMatrix;
 
 		// Get a handle for our "MVP" uniform
 		// Only during the initialisation
 		GLuint MVPMatrixId = glGetUniformLocation(shader.ProgramObject, "MVP");
 		GLuint MVMatrixId = glGetUniformLocation(shader.ProgramObject, "M");
+		GLuint lightMVPMatrixId = glGetUniformLocation(shader.ProgramObject, "lightMVP");
 
 		// Send our transformation to the currently bound shader, in the "MVP" uniform
 		// This is done in the main loop since each model will have a different MVP matrix (At least for the M part)
 		glUniformMatrix4fv(MVPMatrixId, 1, GL_FALSE, &MVP[0][0]);
 		glUniformMatrix4fv(MVMatrixId, 1, GL_FALSE, &modelMatrix[0][0]);
+		glUniformMatrix4fv(lightMVPMatrixId, 1, GL_FALSE, &lightMVP[0][0]);
 
 		m_sphere.Draw();
 	}
@@ -80,16 +84,19 @@ public:
 	{
 		glm::mat4 MV = m_viewMatrix * modelMatrix;
 		glm::mat4 MVP = m_projectionMatrix * MV;
+		glm::mat4 lightMVP = m_lightSpaceViewProjectionMatrix * modelMatrix;
 
 		// Get a handle for our "MVP" uniform
 		// Only during the initialisation
 		GLuint MVPMatrixId = glGetUniformLocation(shader.ProgramObject, "MVP");
 		GLuint MMatrixId = glGetUniformLocation(shader.ProgramObject, "M");
+		GLuint lightMVPMatrixId = glGetUniformLocation(shader.ProgramObject, "lightMVP");
 
 		// Send our transformation to the currently bound shader, in the "MVP" uniform
 		// This is done in the main loop since each model will have a different MVP matrix (At least for the M part)
 		glUniformMatrix4fv(MVPMatrixId, 1, GL_FALSE, &MVP[0][0]);
 		glUniformMatrix4fv(MMatrixId, 1, GL_FALSE, &modelMatrix[0][0]);
+		glUniformMatrix4fv(lightMVPMatrixId, 1, GL_FALSE, &lightMVP[0][0]);
 
 		m_quad.Draw();
 	}
@@ -112,10 +119,11 @@ public:
 		// Use the program object
 		glUseProgram(shader.ProgramObject);
 
-		glm::vec4 lightDirection(0.f, 1.f, 0.5f, 0.f);
-		lightDirection = glm::normalize(lightDirection);
-		GLuint worldLightDirectionUniform = glGetUniformLocation(m_sceneShader.ProgramObject, "worldLightDirection");
-		glUniform3f(worldLightDirectionUniform, lightDirection.x, lightDirection.y, lightDirection.z);
+		GLuint ShadowMapID = glGetUniformLocation(shader.ProgramObject, "shadowMap");
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, m_depthTexture);
+		glUniform1i(ShadowMapID, 0);
 
 		GLuint worldLightPositionUniform = glGetUniformLocation(m_sceneShader.ProgramObject, "worldLightPosition");
 		
@@ -143,25 +151,16 @@ public:
 		glDisable(GL_CULL_FACE);
 
 		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_depthTexture, 0);
-
 		glDrawBuffer(GL_NONE); // No color buffer is drawn to.
-
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		const Shader &shader = m_sceneShader;
 
-		glm::mat4 depthProjectionMatrix = glm::perspective<float>(45.0f, 1.0f, 0.5f, 5.0f);
-		glm::mat4 depthViewMatrix = glm::lookAt(m_lightPosition, glm::vec3(0,0,0), glm::vec3(0,1,0));
-
-		glm::mat4 depthVP = depthProjectionMatrix * depthViewMatrix;
 		glm::mat4 sphereModelMatrix = glm::translate(glm::mat4(), m_sphere.Position);
-		
-		glm::mat4 depthMVP = depthVP * sphereModelMatrix;
+		glm::mat4 depthMVP = m_lightSpaceViewProjectionMatrix * sphereModelMatrix;
 
 		GLuint MVPMatrixId = glGetUniformLocation(shader.ProgramObject, "MVP");
 
-		// Send our transformation to the currently bound shader, in the "MVP" uniform
-		// This is done in the main loop since each model will have a different MVP matrix (At least for the M part)
 		glUniformMatrix4fv(MVPMatrixId, 1, GL_FALSE, &depthMVP[0][0]);
 
 		m_sphere.Draw();
