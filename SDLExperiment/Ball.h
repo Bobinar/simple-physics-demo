@@ -54,7 +54,7 @@ public:
 		Position = newPosition;
 	}
 
-	void Draw()
+	void Draw() const
 	{
 		m_sphereMesh.Draw();
 	}

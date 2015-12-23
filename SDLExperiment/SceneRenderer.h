@@ -12,7 +12,6 @@
 #include "SceneShader.h"
 #include "ShadowMapShader.h"
 
-
 class SceneRenderer
 {
 private:
@@ -59,7 +58,7 @@ public:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	}
 
-	void DrawSphere(Shader &shader, glm::mat4 modelMatrix)
+	void DrawSphere(const Shader &shader, glm::mat4 modelMatrix) const
 	{
 		glm::mat4 MV = m_viewMatrix * modelMatrix;
 		glm::mat4 MVP = m_projectionMatrix * MV;
@@ -77,7 +76,7 @@ public:
 		m_sphere.Draw();
 	}
 
-	void DrawQuad(Shader &shader, glm::mat4 modelMatrix)
+	void DrawQuad(const Shader &shader, glm::mat4 modelMatrix) const 
 	{
 		glm::mat4 MV = m_viewMatrix * modelMatrix;
 		glm::mat4 MVP = m_projectionMatrix * MV;
@@ -85,32 +84,31 @@ public:
 		// Get a handle for our "MVP" uniform
 		// Only during the initialisation
 		GLuint MVPMatrixId = glGetUniformLocation(shader.ProgramObject, "MVP");
-		GLuint MVMatrixId = glGetUniformLocation(shader.ProgramObject, "M");
+		GLuint MMatrixId = glGetUniformLocation(shader.ProgramObject, "M");
 
 		// Send our transformation to the currently bound shader, in the "MVP" uniform
 		// This is done in the main loop since each model will have a different MVP matrix (At least for the M part)
 		glUniformMatrix4fv(MVPMatrixId, 1, GL_FALSE, &MVP[0][0]);
-		glUniformMatrix4fv(MVMatrixId, 1, GL_FALSE, &modelMatrix[0][0]);
+		glUniformMatrix4fv(MMatrixId, 1, GL_FALSE, &modelMatrix[0][0]);
 
 		m_quad.Draw();
 	}
 
-	void Draw()
+	void Draw() const
 	{
 		DrawShadowMap();
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		
 		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK); // Cull back-facing triangles -> draw only front-facing triangles
+		glCullFace(GL_BACK); 
 		glViewport(0, 0, m_width, m_height);
 
 		// Clear the color buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		
+		const Shader &shader = m_sceneShader;
 
-
-		//Shader &shader = m_depthShader;
-		Shader &shader = m_sceneShader;
 		// Use the program object
 		glUseProgram(shader.ProgramObject);
 
@@ -132,13 +130,13 @@ public:
 		glm::mat4 onGroundTransform = floorModelTranslationMatrix  * floorModelRotationMatrix;
 		DrawQuad(shader, onGroundTransform);
 		
-		glm::mat4 sphereScaleMatrix;// = glm::scale(glm::mat4(), glm::vec3(m_sphere.Radius));
+		glm::mat4 sphereScaleMatrix;
 		glm::mat4 sphereTranslationMatrix = glm::translate(glm::mat4(), m_sphere.Position);
 		glm::mat4 sphereModelMatrix = sphereTranslationMatrix * sphereScaleMatrix;
 		DrawSphere(shader, sphereModelMatrix);
 	}
 
-	void DrawShadowMap()
+	void DrawShadowMap() const
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, m_shadowMapFramebufferName);
 		glViewport(0, 0, 1024, 1024); // Render on the whole framebuffer, complete from the lower left corner to the upper right
@@ -150,9 +148,26 @@ public:
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		const Shader &shader = m_sceneShader;
+
+		glm::mat4 depthProjectionMatrix = glm::perspective<float>(45.0f, 1.0f, 0.5f, 5.0f);
+		glm::mat4 depthViewMatrix = glm::lookAt(m_lightPosition, glm::vec3(0,0,0), glm::vec3(0,1,0));
+
+		glm::mat4 depthVP = depthProjectionMatrix * depthViewMatrix;
+		glm::mat4 sphereModelMatrix = glm::translate(glm::mat4(), m_sphere.Position);
+		
+		glm::mat4 depthMVP = depthVP * sphereModelMatrix;
+
+		GLuint MVPMatrixId = glGetUniformLocation(shader.ProgramObject, "MVP");
+
+		// Send our transformation to the currently bound shader, in the "MVP" uniform
+		// This is done in the main loop since each model will have a different MVP matrix (At least for the M part)
+		glUniformMatrix4fv(MVPMatrixId, 1, GL_FALSE, &depthMVP[0][0]);
+
+		m_sphere.Draw();
+
 		// Always check that our framebuffer is ok
-		// TODO: Uncomment when drawing something
-		//assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE);
+		assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
 	}
 
 	void Update(float deltaTime)
