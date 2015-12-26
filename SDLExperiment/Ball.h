@@ -39,7 +39,7 @@ public:
 			//forceSum += m_mass * m_speed.length() * glm::vec3(0,1,0) * ReboundFactor;
 			if (m_speed.y < 0)
 			{
-				m_speed = -m_speed *0.9f;
+				m_speed = -m_speed *0.95f;
 			}
 		}
 		
