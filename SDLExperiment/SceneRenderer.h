@@ -47,9 +47,12 @@ public:
 		// Depth texture. Slower than a depth buffer, but you can sample it later in your shader
 		glGenTextures(1, &m_depthTexture);
 		glBindTexture(GL_TEXTURE_2D, m_depthTexture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, 1024, 1024, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		const GLuint ShadowMapResolution = 1024;
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, ShadowMapResolution, ShadowMapResolution, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+		//glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, ShadowMapResolution, ShadowMapResolution, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0); for float texture
+		
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
@@ -57,6 +60,11 @@ public:
 		glm::mat4 depthViewMatrix = glm::lookAt(m_lightPosition, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 
 		m_lightSpaceViewProjectionMatrix = depthProjectionMatrix * depthViewMatrix;
+
+		glBindFramebuffer(GL_FRAMEBUFFER, m_shadowMapFramebufferName);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_depthTexture, 0);
+		//glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_depthTexture, 0); for float texture
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 	void DrawSphere(const Shader &shader, glm::mat4 modelMatrix) const
@@ -148,20 +156,17 @@ public:
 		glViewport(0, 0, 1024, 1024); // Render on the whole framebuffer, complete from the lower left corner to the upper right
 		glDisable(GL_CULL_FACE);
 
-		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_depthTexture, 0);
-		// TODO: does not link in emscripten. Use glDrawBufferS?
-		glDrawBuffer(GL_NONE); // No color buffer is drawn to.
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		const Shader &shader = m_sceneShader;
+		const Shader &shader = m_depthShader;
+
+		glUseProgram(shader.ProgramObject);
 
 		glm::mat4 sphereModelMatrix = glm::translate(glm::mat4(), m_sphere.Position);
 		glm::mat4 depthMVP = m_lightSpaceViewProjectionMatrix * sphereModelMatrix;
 
 		GLuint MVPMatrixId = glGetUniformLocation(shader.ProgramObject, "MVP");
-
 		glUniformMatrix4fv(MVPMatrixId, 1, GL_FALSE, &depthMVP[0][0]);
-
 		m_sphere.Draw();
 
 		// Always check that our framebuffer is ok
