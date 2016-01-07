@@ -29,6 +29,6 @@ namespace ShadowMapShader
 		"varying vec3 worldPosition;				  \n"
 		"void main()                                  \n"
 		"{                                            \n"
-		"  gl_FragColor = packFloatToVec4i(gl_FragCoord.z);			  \n"
+		"  gl_FragColor = vec4(gl_FragCoord.z);			  \n"
 		"}                                            \n";
 }
