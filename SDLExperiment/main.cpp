@@ -9,13 +9,6 @@
 #include <stdio.h>
 #include <time.h>
 
-#include "Cube.h"
-
-#include "glm/vec3.hpp" 
-#include "glm/vec4.hpp" 
-#include "glm/mat4x4.hpp" 
-#include "glm/gtc/matrix_transform.hpp" 
-#include "glm/gtc/constants.hpp" 
 #include <iostream>
 #include "SceneRenderer.h"
 
@@ -23,11 +16,6 @@ bool gRenderQuad;
 
 SceneRenderer * g_sceneRenderer;
 
-///
-// Draw a triangle using the shader pair created in Init()
-//
-GLuint esContextWidth, esContextHeight;
-float rotationAngle = 0.0f;
 clock_t begin_time;
 
 void Update()
@@ -35,8 +23,6 @@ void Update()
 	clock_t currentTime = clock();
 	float deltaTime = float(currentTime - begin_time) / CLOCKS_PER_SEC;
 	begin_time = currentTime;
-	rotationAngle += 1.f * deltaTime;
-	//printf("%f \n", deltaTime);
 
 	g_sceneRenderer->Update(deltaTime);
 }
@@ -55,7 +41,6 @@ void handleKeys(unsigned char key, int x, int y)
 	}
 }
 
-
 void MainLoop()
 {
 	Update();
@@ -73,21 +58,20 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1); // *new*
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1); 
 
-	GLuint esContextWidth = 800;
-	GLuint esContextHeight = 800;
+	GLuint windowWidth = 800;
+	GLuint windowHeight = 800;
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
 
-	window = SDL_CreateWindow("sdl_fog_density", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, esContextWidth, esContextHeight, SDL_WINDOW_OPENGL);
+	window = SDL_CreateWindow("sdl_fog_density", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowWidth, windowHeight, SDL_WINDOW_OPENGL);
 	if (!window) {
 		printf("Unable to create window: %s\n", SDL_GetError());
 		return 1;
 	}
 
 	context = SDL_GL_CreateContext(window);
-	printf("%p\n", context);
 
 	begin_time = clock();
 
@@ -99,7 +83,7 @@ int main(int argc, char *argv[])
 	}
 #endif
 
-	g_sceneRenderer = new SceneRenderer(esContextWidth, esContextHeight);
+	g_sceneRenderer = new SceneRenderer(windowWidth, windowHeight);
 
 	bool quit = false;
 #if !defined(__EMSCRIPTEN__)
