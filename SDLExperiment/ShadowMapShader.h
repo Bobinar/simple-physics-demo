@@ -20,6 +20,6 @@ namespace ShadowMapShader
 		"varying vec3 worldPosition;				  \n"
 		"void main()                                  \n"
 		"{                                            \n"
-		"  gl_FragColor = vec4(gl_FragCoord.z);			  \n"
+		"  gl_FragColor = vec4(1.0); // color result does not matter, we only need the depth buffer to be written correctly			  \n"
 		"}                                            \n";
 }
