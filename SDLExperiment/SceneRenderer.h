@@ -49,7 +49,7 @@ public:
 		glBindTexture(GL_TEXTURE_2D, m_depthTexture);
 		const GLuint ShadowMapResolution = 1024;
 		glewGetExtension("OES_texture_float");
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, ShadowMapResolution, ShadowMapResolution, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, ShadowMapResolution, ShadowMapResolution, 0, GL_RGB, GL_FLOAT, 0);
 		
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
