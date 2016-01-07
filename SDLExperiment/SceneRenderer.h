@@ -34,7 +34,7 @@ public:
 		, m_depthShader(ShadowMapShader::vShaderStr, ShadowMapShader::fShaderStr)
 		, m_viewMatrix(glm::lookAt(glm::vec3(0, 3, 5.f), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)))
 		, m_projectionMatrix(glm::perspective<float>(glm::pi<float>() * 0.25f,((float) m_width )/ m_height, 0.1f, 100.f))
-		, m_sphere(glm::vec3(0.0f, 1.5f, 0.2f), 0.1f,20,20)
+		, m_sphere(glm::vec3(0.0f, 1.0f, 0.2f), 0.1f,20,20)
 		, m_lightPosition(0.25f, 1.5f, 1.0f)
 	{
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
