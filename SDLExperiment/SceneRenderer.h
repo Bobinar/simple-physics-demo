@@ -172,7 +172,7 @@ public:
 		assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
 	}
 
-	void Update(float deltaTime)
+	void SimulationUpdate(float deltaTime)
 	{
 		m_sphere.Update(deltaTime);
 	}

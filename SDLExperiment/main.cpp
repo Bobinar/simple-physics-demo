@@ -16,15 +16,24 @@ bool gRenderQuad;
 
 SceneRenderer * g_sceneRenderer;
 
-clock_t begin_time;
+clock_t g_previousTime;
+float g_remainingTime;
 
 void Update()
 {
-	clock_t currentTime = clock();
-	float deltaTime = float(currentTime - begin_time) / CLOCKS_PER_SEC;
-	begin_time = currentTime;
+	const float FixedTimestepDelta = 0.001f;
 
-	g_sceneRenderer->Update(deltaTime);
+	clock_t currentTime = clock();
+	float deltaTime = float(currentTime - g_previousTime) / (float)CLOCKS_PER_SEC;
+	g_previousTime = currentTime;
+	
+	g_remainingTime += deltaTime;
+	
+	while (g_remainingTime > FixedTimestepDelta)
+	{
+		g_sceneRenderer->SimulationUpdate(FixedTimestepDelta);
+		g_remainingTime -= FixedTimestepDelta;
+	}
 }
 
 void Draw()
@@ -32,9 +41,9 @@ void Draw()
 	g_sceneRenderer->Draw();
 }
 
+// unused for now
 void handleKeys(unsigned char key, int x, int y)
 {
-	//Toggle quad
 	if (key == 'q')
 	{
 		gRenderQuad = !gRenderQuad;
@@ -73,7 +82,8 @@ int main(int argc, char *argv[])
 
 	context = SDL_GL_CreateContext(window);
 
-	begin_time = clock();
+	g_previousTime = clock();
+	g_remainingTime = 0;
 
 #if !defined(__EMSCRIPTEN__)
 	GLenum glewError = glewInit();
