@@ -23,15 +23,10 @@ namespace SceneShader
 		"   worldNormal = (M * vec4(vColor,0.0)).xyz;			\n"
 		"   lightSpaceProjectedCoords = lightMVP * vec4(vPosition, 1.0);  \n"
 		"}														\n";
-	//unpackFloatFromVec4i function comes from http://www.ozone3d.net/blogs/lab/20080604/glsl-float-to-rgba8-encoder/
+
 	GLbyte fShaderStr[] =
 		"#version 100\n"
 		"precision highp float;\n"
-		"float unpackFloatFromVec4i(const vec4 value)\n"
-		"{\n"
-		"const vec4 bitSh = vec4(1.0 / (256.0*256.0*256.0), 1.0 / (256.0*256.0), 1.0 / 256.0, 1.0);\n"
-		"return(dot(value, bitSh));\n"
-		"}\n"
 		"uniform vec3 worldLightPosition;"
 		"varying vec3 worldNormal;\n"
 		"varying vec3 worldPosition;	\n"
