@@ -49,8 +49,7 @@ public:
 		glBindTexture(GL_TEXTURE_2D, m_depthTexture);
 		const GLuint ShadowMapResolution = 1024;
 		glewGetExtension("OES_texture_float");
-		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, ShadowMapResolution, ShadowMapResolution, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, ShadowMapResolution, ShadowMapResolution, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);// for float texture
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, ShadowMapResolution, ShadowMapResolution, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
 		
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -63,8 +62,7 @@ public:
 		m_lightSpaceViewProjectionMatrix = depthProjectionMatrix * depthViewMatrix;
 
 		glBindFramebuffer(GL_FRAMEBUFFER, m_shadowMapFramebufferName);
-		//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_depthTexture, 0);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthTexture, 0);// for float texture
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_depthTexture, 0);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
