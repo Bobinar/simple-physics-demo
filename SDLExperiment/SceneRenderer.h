@@ -1,7 +1,6 @@
 #pragma once
 #include <gl/glew.h>
 #include "glm/vec3.hpp" 
-#include "glm/vec4.hpp" 
 #include "glm/mat4x4.hpp" 
 #include "glm/gtc/matrix_transform.hpp" 
 #include "glm/gtc/constants.hpp" 
@@ -25,8 +24,8 @@ private:
 	GLuint m_depthTexture;
 	GLuint m_shadowMapFramebufferName;
 	glm::mat4 m_lightSpaceViewProjectionMatrix;
-public:
 
+public:
 	SceneRenderer(GLuint width, GLuint height)
 		: m_width(width)
 		, m_height(height)

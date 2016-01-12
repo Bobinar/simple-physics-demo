@@ -61,7 +61,6 @@ int main(int argc, char *argv[])
 	SDL_Window *window;
 	SDL_GLContext context;
 
-	// Slightly different SDL initialization
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
 		printf("Unable to initialize SDL: %s\n", SDL_GetError());
 		return 1;
@@ -99,19 +98,16 @@ int main(int argc, char *argv[])
 #if !defined(__EMSCRIPTEN__)
 	SDL_Event e;
 
-	//Enable text input
 	SDL_StartTextInput();
 	while (!quit)
 	{
-		//Handle events on queue
 		while (SDL_PollEvent(&e) != 0)
 		{
-			//User requests quit
 			if (e.type == SDL_QUIT)
 			{
 				quit = true;
 			}
-			//Handle keypress with current mouse position
+
 			else if (e.type == SDL_TEXTINPUT)
 			{
 				int x = 0, y = 0;
@@ -122,7 +118,6 @@ int main(int argc, char *argv[])
 
 		MainLoop();
 
-		//Update screen
 		SDL_GL_SwapWindow(window);
 	}
 
