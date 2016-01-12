@@ -32,7 +32,7 @@ public:
 		, m_sceneShader(SceneShader::vertexShaderString, SceneShader::fragmentShaderString)
 		, m_depthShader(ShadowMapShader::vertexShaderString, ShadowMapShader::fragmentShaderString)
 		, m_viewMatrix(glm::lookAt(glm::vec3(0, 3, 5.f), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)))
-		, m_projectionMatrix(glm::perspective<float>(glm::pi<float>() * 0.25f,((float) m_width )/ m_height, 0.1f, 100.f))
+		, m_projectionMatrix(glm::perspective<float>(glm::pi<float>() * 0.25f,((float) m_width )/ m_height, 0.1f, 10.f))
 		, m_sphere(glm::vec3(0.0f, 1.0f, 0.2f), 0.1f,20,20)
 		, m_lightPosition(0.25f, 1.5f, 1.0f)
 	{
@@ -43,7 +43,6 @@ public:
 
 		glGenFramebuffers(1, &m_shadowMapFramebufferName);
 	
-		// Depth texture. Slower than a depth buffer, but you can sample it later in your shader
 		glGenTextures(1, &m_depthTexture);
 		glBindTexture(GL_TEXTURE_2D, m_depthTexture);
 		const GLuint ShadowMapResolution = 1024;
