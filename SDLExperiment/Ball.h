@@ -1,9 +1,5 @@
 #pragma once
 #include "glm/vec3.hpp" 
-#include "glm/vec4.hpp" 
-#include "glm/mat4x4.hpp" 
-#include "glm/gtc/matrix_transform.hpp" 
-#include "glm/gtc/constants.hpp" 
 #include "SphereMesh.h"
 
 class Ball
@@ -29,24 +25,25 @@ public:
 
 	void Update(float deltaTime)
 	{
-		glm::vec3 gravityForce(0, -9.8 * m_mass, 0);
+		const float GravityFactor = -9.8f;
+		glm::vec3 gravityForce(0, GravityFactor * m_mass, 0);
 		
 		glm::vec3 forceSum = gravityForce;
 
 		if (Position.y < Radius)
 		{
-			//const float ReboundFactor = 10.f;
-			//forceSum += m_mass * m_speed.length() * glm::vec3(0,1,0) * ReboundFactor;
 			if (m_speed.y < 0)
 			{
-				m_speed = -m_speed *0.95f;
+				const float ReboundEnergyLossFactor = 0.95f;
+				m_speed = -m_speed * ReboundEnergyLossFactor;
 			}
+			Position.y = Radius;
 		}
 		
 		glm::vec3 acceleration = forceSum / m_mass;
 
-		float dampening = 0.999f;
-		glm::vec3 newSpeed = m_speed + acceleration * deltaTime * dampening;
+		float dampingFactor = 0.999f;
+		glm::vec3 newSpeed = m_speed + acceleration * deltaTime * dampingFactor;
 
 		glm::vec3 newPosition = Position + newSpeed * deltaTime;
 
