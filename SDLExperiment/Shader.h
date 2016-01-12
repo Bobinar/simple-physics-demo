@@ -51,30 +51,26 @@ private:
 public:
 	GLuint ProgramObject;
 
-	Shader(GLbyte *vShaderStr, GLbyte *fShaderStr)
+	Shader(GLbyte *vertexShaderString, GLbyte *fragmentShaderString)
 	{
-
 		GLuint vertexShader;
 		GLuint fragmentShader;
 		GLuint programObject;
 		GLint linked;
 
-		// Load the vertex/fragment shaders
-		vertexShader = LoadShader(GL_VERTEX_SHADER, (const char *)vShaderStr);
-		fragmentShader = LoadShader(GL_FRAGMENT_SHADER, (const char *)fShaderStr);
+		vertexShader = LoadShader(GL_VERTEX_SHADER, (const char *)vertexShaderString);
+		fragmentShader = LoadShader(GL_FRAGMENT_SHADER, (const char *)fragmentShaderString);
 
-		// Create the program object
 		programObject = glCreateProgram();
 
 		assert(programObject != 0);
 			
-
 		glAttachShader(programObject, vertexShader);
 		glAttachShader(programObject, fragmentShader);
 
 		// Bind vPosition to attribute 0   
 		glBindAttribLocation(programObject, 0, "vPosition");
-		glBindAttribLocation(programObject, 1, "vColor");
+		glBindAttribLocation(programObject, 1, "vNormal");
 
 		// Link the program
 		glLinkProgram(programObject);
@@ -90,7 +86,6 @@ public:
 
 			if (infoLen > 1)
 			{
-				//char* infoLog = (char *)malloc(sizeof(char) * infoLen);
 				char* infoLog = new char[infoLen];
 				glGetProgramInfoLog(programObject, infoLen, NULL, infoLog);
 
@@ -103,7 +98,6 @@ public:
 			assert(false);
 		}
 
-		// Store the program object
 		ProgramObject = programObject;
 	}
 

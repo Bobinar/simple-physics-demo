@@ -4,7 +4,7 @@
 
 namespace SceneShader
 {
-	GLbyte vShaderStr[] =
+	GLbyte vertexShaderString[] =
 		"#version 100\n"
 		"precision highp float;\n"
 		"uniform mat4 MVP;\n"
@@ -12,7 +12,7 @@ namespace SceneShader
 		"uniform mat4 lightMVP;\n"
 		"uniform vec3 worldLightPosition;\n "
 		"attribute vec3 vPosition;    \n"
-		"attribute vec3 vColor;		\n"
+		"attribute vec3 vNormal;		\n"
 		"varying vec3 worldNormal;	\n"
 		"varying vec3 worldPosition;	\n"
 		"varying vec4 lightSpaceProjectedCoords; \n"
@@ -20,11 +20,11 @@ namespace SceneShader
 		"{														\n"
 		"   gl_Position = MVP * vec4(vPosition,1.0);			\n"
 		"   worldPosition = (M * vec4(vPosition,1.0)).xyz;		\n"
-		"   worldNormal = (M * vec4(vColor,0.0)).xyz;			\n"
+		"   worldNormal = (M * vec4(vNormal,0.0)).xyz;			\n"
 		"   lightSpaceProjectedCoords = lightMVP * vec4(vPosition, 1.0);  \n"
 		"}														\n";
 
-	GLbyte fShaderStr[] =
+	GLbyte fragmentShaderString[] =
 		"#version 100\n"
 		"precision highp float;\n"
 		"uniform vec3 worldLightPosition;"
