@@ -165,8 +165,6 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CubeGeometryFactory.h" />
-    <ClInclude Include="Cube.h" />
     <ClInclude Include="SceneShader.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SceneRenderer.h" />
@@ -175,7 +173,6 @@
     <ClInclude Include="ShaderFactory.h" />
     <ClInclude Include="ShadowMapShader.h" />
     <ClInclude Include="SphereMesh.h" />
-    <ClInclude Include="Triangle.h" />
     <ClInclude Include="Quad.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
