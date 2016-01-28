@@ -1,6 +1,7 @@
 #pragma once
 #include <gl/glew.h>
 #include "CubeGeometryFactory.h"
+#include "ShaderConstants.h"
 #include "glm/vec3.hpp" 
 
 class Cube
@@ -8,35 +9,30 @@ class Cube
 
 private:
 	GLuint m_vertexbuffer;
-	GLuint m_colorbuffer;
+	GLuint m_normalBuffer;
 public:
 	glm::vec3 Position;
 
 	Cube()
 	{
-		CubeGeometryFactory::CreateCubeBuffers(m_vertexbuffer, m_colorbuffer);
+		CubeGeometryFactory::CreateCubeBuffers(m_vertexbuffer, m_normalBuffer);
 	}
 
 	~Cube()
 	{
 		glDeleteBuffers(1, &m_vertexbuffer);
-		glDeleteBuffers(1, &m_colorbuffer);
+		glDeleteBuffers(1, &m_normalBuffer);
 	}
 
 	void Draw() const
 	{
-		// need to do something like this
-
-		// GLuint positionID = glGetAttribLocation(programID, "position_modelspace");
-		//GLuint uvID = glGetAttribLocation(programID, "uv");
-
 		glBindBuffer(GL_ARRAY_BUFFER, m_vertexbuffer);
-		glVertexAttribPointer(0, 3, GL_FLOAT, 0, 0, 0);
-		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(ShaderConstants::PositionAttributeLocation, 3, GL_FLOAT, 0, 0, 0);
+		glEnableVertexAttribArray(ShaderConstants::PositionAttributeLocation);
 
-		glBindBuffer(GL_ARRAY_BUFFER, m_colorbuffer);
-		glVertexAttribPointer(1, 3, GL_FLOAT, 0, 0, 0);
-		glEnableVertexAttribArray(1);
+		glBindBuffer(GL_ARRAY_BUFFER, m_normalBuffer);
+		glVertexAttribPointer(ShaderConstants::NormalAttributeLocation, 3, GL_FLOAT, 0, 0, 0);
+		glEnableVertexAttribArray(ShaderConstants::NormalAttributeLocation);
 
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 	}

@@ -19,9 +19,6 @@ public:
 			0.0f, 1.0f, 0.f,
 			0.f,  0.f,  1.f };
 
-
-		// No clientside arrays, so do this in a webgl-friendly manner
-		
 		glGenBuffers(1, &vertexPosObject);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexPosObject);
 		glBufferData(GL_ARRAY_BUFFER, 9 * 4, vVertices, GL_STATIC_DRAW);

@@ -88,17 +88,13 @@ public:
 
 	void Draw() const
 	{
-		// TODO: need to do something like this
-		// GLuint positionID = glGetAttribLocation(programID, "position_modelspace");
-		// GLuint uvID = glGetAttribLocation(programID, "uv");
-
 		glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
-		glVertexAttribPointer(0, 3, GL_FLOAT, 0, 0, 0);
-		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(ShaderConstants::PositionAttributeLocation, 3, GL_FLOAT, 0, 0, 0);
+		glEnableVertexAttribArray(ShaderConstants::PositionAttributeLocation);
 
 		glBindBuffer(GL_ARRAY_BUFFER, m_colorBuffer);
-		glVertexAttribPointer(1, 3, GL_FLOAT, 0, 0, 0);
-		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(ShaderConstants::NormalAttributeLocation, 3, GL_FLOAT, 0, 0, 0);
+		glEnableVertexAttribArray(ShaderConstants::NormalAttributeLocation);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indicesBuffer);
 

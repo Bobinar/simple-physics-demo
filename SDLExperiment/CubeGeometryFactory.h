@@ -5,8 +5,6 @@ namespace CubeGeometryFactory
 {
 	inline void CreateCubeBuffers(GLuint &m_vertexbuffer, GLuint &m_colorbuffer)
 	{
-		// Our vertices. Tree consecutive floats give a 3D vertex; Three consecutive vertices give a triangle.
-		// A cube has 6 faces with 2 triangles each, so this makes 6*2=12 triangles, and 12*3 vertices
 		static const GLfloat g_vertex_buffer_data[] = {
 			-1.0f,-1.0f,-1.0f,
 			-1.0f,-1.0f, 1.0f,
@@ -46,7 +44,6 @@ namespace CubeGeometryFactory
 			1.0f,-1.0f, 1.0f
 		};
 
-		// One color for each vertex. They were generated randomly.
 		static const GLfloat g_color_buffer_data[] = {
 			0.583f,  0.771f,  0.014f,
 			0.609f,  0.115f,  0.436f,

@@ -70,14 +70,10 @@ public:
 		glm::mat4 MVP = m_projectionMatrix * MV;
 		glm::mat4 lightMVP = m_lightSpaceViewProjectionMatrix * modelMatrix;
 
-		// Get a handle for our "MVP" uniform
-		// Only during the initialisation
 		GLuint MVPMatrixId = glGetUniformLocation(shader.ProgramObject, "MVP");
 		GLuint MVMatrixId = glGetUniformLocation(shader.ProgramObject, "M");
 		GLuint lightMVPMatrixId = glGetUniformLocation(shader.ProgramObject, "lightMVP");
 
-		// Send our transformation to the currently bound shader, in the "MVP" uniform
-		// This is done in the main loop since each model will have a different MVP matrix (At least for the M part)
 		glUniformMatrix4fv(MVPMatrixId, 1, GL_FALSE, &MVP[0][0]);
 		glUniformMatrix4fv(MVMatrixId, 1, GL_FALSE, &modelMatrix[0][0]);
 		glUniformMatrix4fv(lightMVPMatrixId, 1, GL_FALSE, &lightMVP[0][0]);
@@ -91,14 +87,10 @@ public:
 		glm::mat4 MVP = m_projectionMatrix * MV;
 		glm::mat4 lightMVP = m_lightSpaceViewProjectionMatrix * modelMatrix;
 
-		// Get a handle for our "MVP" uniform
-		// Only during the initialisation
 		GLuint MVPMatrixId = glGetUniformLocation(shader.ProgramObject, "MVP");
 		GLuint MMatrixId = glGetUniformLocation(shader.ProgramObject, "M");
 		GLuint lightMVPMatrixId = glGetUniformLocation(shader.ProgramObject, "lightMVP");
 
-		// Send our transformation to the currently bound shader, in the "MVP" uniform
-		// This is done in the main loop since each model will have a different MVP matrix (At least for the M part)
 		glUniformMatrix4fv(MVPMatrixId, 1, GL_FALSE, &MVP[0][0]);
 		glUniformMatrix4fv(MMatrixId, 1, GL_FALSE, &modelMatrix[0][0]);
 		glUniformMatrix4fv(lightMVPMatrixId, 1, GL_FALSE, &lightMVP[0][0]);
@@ -116,12 +108,10 @@ public:
 		glCullFace(GL_BACK); 
 		glViewport(0, 0, m_width, m_height);
 
-		// Clear the color buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		const Shader &shader = m_sceneShader;
 
-		// Use the program object
 		glUseProgram(shader.ProgramObject);
 
 		GLuint ShadowMapID = glGetUniformLocation(shader.ProgramObject, "shadowMap");
@@ -150,7 +140,7 @@ public:
 	void DrawShadowMap() const
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, m_shadowMapFramebufferName);
-		glViewport(0, 0, 1024, 1024); // Render on the whole framebuffer, complete from the lower left corner to the upper right
+		glViewport(0, 0, 1024, 1024);
 		glDisable(GL_CULL_FACE);
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -166,7 +156,6 @@ public:
 		glUniformMatrix4fv(MVPMatrixId, 1, GL_FALSE, &depthMVP[0][0]);
 		m_sphere.Draw();
 
-		// Always check that our framebuffer is ok
 		assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
 	}
 
