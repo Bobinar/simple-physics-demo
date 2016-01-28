@@ -14,7 +14,7 @@ public:
 	glm::vec3 Position;
 	float Radius;
 
-	Ball(glm::vec3 position, float radius, unsigned int rings, unsigned int sectors)
+	Ball(const glm::vec3 &position, float radius, unsigned int rings, unsigned int sectors)
 		: m_sphereMesh(radius, rings, sectors)
 		, Position(position)
 		, Radius(radius)

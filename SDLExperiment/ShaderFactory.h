@@ -1,6 +1,6 @@
 #pragma once
 #include <gl/glew.h>
-#include "ShaderConstants.h"
+#include "RenderConstants.h"
 #include <cassert>
 
 namespace
@@ -63,8 +63,8 @@ namespace ShaderFactory
 		glAttachShader(programObject, vertexShader);
 		glAttachShader(programObject, fragmentShader);
 
-		glBindAttribLocation(programObject, ShaderConstants::PositionAttributeLocation, "vPosition");
-		glBindAttribLocation(programObject, ShaderConstants::NormalAttributeLocation, "vNormal");
+		glBindAttribLocation(programObject, RenderConstants::PositionAttributeLocation, "vPosition");
+		glBindAttribLocation(programObject, RenderConstants::NormalAttributeLocation, "vNormal");
 
 		glLinkProgram(programObject);
 

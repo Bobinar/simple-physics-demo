@@ -39,7 +39,10 @@
     <ClInclude Include="ShaderFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ShaderConstants.h">
+    <ClInclude Include="SceneInitialization.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderConstants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

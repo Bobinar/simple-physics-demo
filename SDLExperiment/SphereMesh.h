@@ -89,12 +89,12 @@ public:
 	void Draw() const
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
-		glVertexAttribPointer(ShaderConstants::PositionAttributeLocation, 3, GL_FLOAT, 0, 0, 0);
-		glEnableVertexAttribArray(ShaderConstants::PositionAttributeLocation);
+		glVertexAttribPointer(RenderConstants::PositionAttributeLocation, 3, GL_FLOAT, 0, 0, 0);
+		glEnableVertexAttribArray(RenderConstants::PositionAttributeLocation);
 
 		glBindBuffer(GL_ARRAY_BUFFER, m_colorBuffer);
-		glVertexAttribPointer(ShaderConstants::NormalAttributeLocation, 3, GL_FLOAT, 0, 0, 0);
-		glEnableVertexAttribArray(ShaderConstants::NormalAttributeLocation);
+		glVertexAttribPointer(RenderConstants::NormalAttributeLocation, 3, GL_FLOAT, 0, 0, 0);
+		glEnableVertexAttribArray(RenderConstants::NormalAttributeLocation);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indicesBuffer);
 

@@ -165,11 +165,12 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="SceneInitialization.h" />
     <ClInclude Include="SceneShader.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SceneRenderer.h" />
     <ClInclude Include="Ball.h" />
-    <ClInclude Include="ShaderConstants.h" />
+    <ClInclude Include="RenderConstants.h" />
     <ClInclude Include="ShaderFactory.h" />
     <ClInclude Include="ShadowMapShader.h" />
     <ClInclude Include="SphereMesh.h" />

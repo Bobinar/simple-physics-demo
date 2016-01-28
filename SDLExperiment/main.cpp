@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include "SceneRenderer.h"
+#include "SceneInitialization.h"
 
 bool gRenderQuad;
 
@@ -73,7 +74,7 @@ int main(int argc, char *argv[])
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
 
-	window = SDL_CreateWindow("sdl_fog_density", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowWidth, windowHeight, SDL_WINDOW_OPENGL);
+	window = SDL_CreateWindow("Simple Physics Demo", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowWidth, windowHeight, SDL_WINDOW_OPENGL);
 	if (!window) {
 		printf("Unable to create window: %s\n", SDL_GetError());
 		return 1;
@@ -91,8 +92,7 @@ int main(int argc, char *argv[])
 		printf("Error initializing GLEW! %s\n", glewGetErrorString(glewError));
 	}
 #endif
-
-	g_sceneRenderer = new SceneRenderer(windowWidth, windowHeight);
+	g_sceneRenderer = SceneInitialization::CreateScene(windowWidth, windowHeight);
 
 	bool quit = false;
 #if !defined(__EMSCRIPTEN__)
@@ -120,12 +120,13 @@ int main(int argc, char *argv[])
 
 		SDL_GL_SwapWindow(window);
 	}
-
+	
 	SDL_StopTextInput();
 #else
 	emscripten_set_main_loop(MainLoop, 0, 1);
 #endif
 
+	delete g_sceneRenderer;
 	SDL_Quit();
 
 	return 0;
