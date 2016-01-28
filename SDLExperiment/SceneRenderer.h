@@ -135,7 +135,7 @@ public:
 	void DrawShadowMap() const
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, m_shadowMapFramebufferName);
-		glViewport(0, 0, 1024, 1024);
+		glViewport(0, 0, RenderConstants::ShadowMapResolution, RenderConstants::ShadowMapResolution);
 		glDisable(GL_CULL_FACE);
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
