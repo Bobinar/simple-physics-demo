@@ -24,6 +24,30 @@ private:
 	GLuint m_depthTexture;
 	GLuint m_shadowMapFramebufferName;
 	glm::mat4 m_lightSpaceViewProjectionMatrix;
+	GLuint m_shadowMapID;
+
+	void InitializeShadowMap()
+	{
+		glGenTextures(1, &m_depthTexture);
+		glBindTexture(GL_TEXTURE_2D, m_depthTexture);
+		const GLuint ShadowMapResolution = 1024;
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, ShadowMapResolution, ShadowMapResolution, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, 0);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+		glGenFramebuffers(1, &m_shadowMapFramebufferName);
+		glBindFramebuffer(GL_FRAMEBUFFER, m_shadowMapFramebufferName);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthTexture, 0);
+
+		glm::mat4 depthProjectionMatrix = glm::perspective<float>(45.0f, 1.0f, 0.5f, 5.0f);
+		glm::mat4 depthViewMatrix = glm::lookAt(m_lightPosition, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+
+		m_lightSpaceViewProjectionMatrix = depthProjectionMatrix * depthViewMatrix;
+	}
 
 public:
 	SceneRenderer(GLuint width, GLuint height)
@@ -41,27 +65,9 @@ public:
 		glDepthFunc(GL_LESS);
 		glEnable(GL_CULL_FACE);
 
-		glGenFramebuffers(1, &m_shadowMapFramebufferName);
-	
-		glGenTextures(1, &m_depthTexture);
-		glBindTexture(GL_TEXTURE_2D, m_depthTexture);
-		const GLuint ShadowMapResolution = 1024;
-		
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, ShadowMapResolution, ShadowMapResolution, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, 0);
-		
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		m_shadowMapID = glGetUniformLocation(m_sceneShader.ProgramObject, "shadowMap");
 
-		glm::mat4 depthProjectionMatrix = glm::perspective<float>(45.0f, 1.0f, 0.5f, 5.0f);
-		glm::mat4 depthViewMatrix = glm::lookAt(m_lightPosition, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-
-		m_lightSpaceViewProjectionMatrix = depthProjectionMatrix * depthViewMatrix;
-
-		glBindFramebuffer(GL_FRAMEBUFFER, m_shadowMapFramebufferName);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthTexture, 0);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		InitializeShadowMap();
 	}
 
 	void DrawSphere(const Shader &shader, glm::mat4 modelMatrix) const
@@ -110,15 +116,10 @@ public:
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-		const Shader &shader = m_sceneShader;
-
-		glUseProgram(shader.ProgramObject);
-
-		GLuint ShadowMapID = glGetUniformLocation(shader.ProgramObject, "shadowMap");
+		glUseProgram(m_sceneShader.ProgramObject);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, m_depthTexture);
-		glUniform1i(ShadowMapID, 0);
 
 		GLuint worldLightPositionUniform = glGetUniformLocation(m_sceneShader.ProgramObject, "worldLightPosition");
 		
@@ -126,15 +127,15 @@ public:
 
 		// Wall only needs brought up 1.0 (to sit on the origin)
 		glm::mat4 wallModelMatrix = glm::translate(glm::mat4(), glm::vec3(0, 1, 0));
-		DrawQuad(shader, wallModelMatrix);
+		DrawQuad(m_sceneShader, wallModelMatrix);
 
 		glm::mat4 floorModelTranslationMatrix = glm::translate(glm::mat4(), glm::vec3(0, 0, 1));
 		glm::mat4 floorModelRotationMatrix = glm::rotate(glm::mat4(), glm::pi<float>() * -0.5f, glm::vec3(1, 0, 0));
 		glm::mat4 onGroundTransform = floorModelTranslationMatrix  * floorModelRotationMatrix;
-		DrawQuad(shader, onGroundTransform);
+		DrawQuad(m_sceneShader, onGroundTransform);
 		
 		glm::mat4 sphereModelMatrix = glm::translate(glm::mat4(), m_sphere.Position);
-		DrawSphere(shader, sphereModelMatrix);
+		DrawSphere(m_sceneShader, sphereModelMatrix);
 	}
 
 	void DrawShadowMap() const
@@ -145,14 +146,12 @@ public:
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		const Shader &shader = m_depthShader;
-
-		glUseProgram(shader.ProgramObject);
+		glUseProgram(m_depthShader.ProgramObject);
 
 		glm::mat4 sphereModelMatrix = glm::translate(glm::mat4(), m_sphere.Position);
 		glm::mat4 depthMVP = m_lightSpaceViewProjectionMatrix * sphereModelMatrix;
 
-		GLuint MVPMatrixId = glGetUniformLocation(shader.ProgramObject, "MVP");
+		GLuint MVPMatrixId = glGetUniformLocation(m_depthShader.ProgramObject, "MVP");
 		glUniformMatrix4fv(MVPMatrixId, 1, GL_FALSE, &depthMVP[0][0]);
 		m_sphere.Draw();
 
