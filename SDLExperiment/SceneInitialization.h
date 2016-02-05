@@ -1,8 +1,10 @@
 #pragma once
 #include "SceneRenderer.h"
+#include "SceneManager.h"
 #include "Shader.h"
 #include "Ball.h"
 #include "RenderConstants.h"
+#include "SceneSimulator.h"
 #include "glm/vec3.hpp" 
 #include "glm/mat4x4.hpp" 
 #include "glm/gtc/matrix_transform.hpp" 
@@ -33,11 +35,22 @@ namespace
 		glBindFramebuffer(GL_FRAMEBUFFER, shadowMapFramebufferName);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
 	}
+
+	SceneSimulator * CreateSimulator(Ball * pBall)
+	{
+		SceneSimulator * pSceneSimulator = new SceneSimulator();
+
+		pSceneSimulator->AddPlane(new Plane(glm::vec3(0, 1, 0), 0));
+		pSceneSimulator->AddPlane(new Plane(glm::vec3(0, 0, 1), 0));
+		pSceneSimulator->AddSphere(pBall);
+
+		return pSceneSimulator;
+	}
 }
 
 namespace SceneInitialization
 {
-	SceneRenderer* CreateScene(GLuint width, GLuint height)
+	SceneManager* CreateScene(GLuint width, GLuint height)
 	{
 		InitializeGLState();
 
@@ -48,7 +61,7 @@ namespace SceneInitialization
 		Shader* pDepthShader = new Shader(ShadowMapShader::vertexShaderString, ShadowMapShader::fragmentShaderString);
 
 		const float BallRadious = 0.1f;
-		const glm::vec3 BallStartPosition(0.0f, 1.0f, 0.2f);
+		const glm::vec3 BallStartPosition(0.0f, 1.0f, 0.5f);
 		Ball * pBall = new Ball(BallStartPosition, BallRadious, 20, 20);
 		Quad * pQuad = new Quad();
 
@@ -76,18 +89,23 @@ namespace SceneInitialization
 
 		glm::mat4 m_lightSpaceViewProjectionMatrix = depthProjectionMatrix * depthViewMatrix;
 
-		return new SceneRenderer(
-			width, 
-			height, 
-			pSceneShader, 
-			pDepthShader, 
-			pBall, 
+		SceneRenderer * pSceneRenderer = new SceneRenderer(
+			width,
+			height,
+			pSceneShader,
+			pDepthShader,
+			pBall,
 			pQuad,
-			viewMatrix, 
-			projectionMatrix, 
-			m_lightSpaceViewProjectionMatrix, 
-			lightPosition, 
-			depthTexture, 
+			viewMatrix,
+			projectionMatrix,
+			m_lightSpaceViewProjectionMatrix,
+			lightPosition,
+			depthTexture,
 			shadowMapFramebufferName);
-	};
+
+		SceneSimulator * pSceneSimulator = CreateSimulator(pBall);
+
+		return new SceneManager(pSceneRenderer, pSceneSimulator);
+	}
+		
 }

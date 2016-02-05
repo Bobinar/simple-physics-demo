@@ -58,7 +58,7 @@ public:
 
 	~SceneRenderer()
 	{
-		delete m_pBall;
+		delete m_pBall; //TODO: handle lifetime of scene elements in SceneManager
 		delete m_pQuad;
 		delete m_pSceneShader;
 		delete m_pDepthShader;
@@ -150,10 +150,5 @@ public:
 		m_pBall->Draw();
 
 		assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
-	}
-
-	void SimulationUpdate(float deltaTime)
-	{
-		m_pBall->Update(deltaTime);
 	}
 };

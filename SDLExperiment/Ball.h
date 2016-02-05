@@ -4,12 +4,12 @@
 
 class Ball
 {
-
 private:
-	glm::vec3 m_speed;
 	SphereMesh m_sphereMesh;
 	float m_mass;
+
 public:
+	glm::vec3 Speed;
 	
 	glm::vec3 Position;
 	float Radius;
@@ -19,6 +19,7 @@ public:
 		, Position(position)
 		, Radius(radius)
 		, m_mass(1.0f)
+		, Speed(0,0,0)
 	{
 
 	}
@@ -27,27 +28,17 @@ public:
 	{
 		const float GravityFactor = -9.8f;
 		glm::vec3 gravityForce(0, GravityFactor * m_mass, 0);
-		
-		glm::vec3 forceSum = gravityForce;
 
-		if (Position.y < Radius)
-		{
-			if (m_speed.y < 0)
-			{
-				const float ReboundEnergyLossFactor = 0.95f;
-				m_speed = -m_speed * ReboundEnergyLossFactor;
-			}
-			Position.y = Radius;
-		}
+		glm::vec3 forceSum = gravityForce;
 		
 		glm::vec3 acceleration = forceSum / m_mass;
 
 		float dampingFactor = 0.999f;
-		glm::vec3 newSpeed = m_speed + acceleration * deltaTime * dampingFactor;
+		glm::vec3 newSpeed = Speed + acceleration * deltaTime * dampingFactor;
 
 		glm::vec3 newPosition = Position + newSpeed * deltaTime;
 
-		m_speed = newSpeed;
+		Speed = newSpeed;
 		Position = newPosition;
 	}
 

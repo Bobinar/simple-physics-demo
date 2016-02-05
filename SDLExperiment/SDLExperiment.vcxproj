@@ -165,8 +165,11 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Plane.h" />
     <ClInclude Include="SceneInitialization.h" />
+    <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SceneShader.h" />
+    <ClInclude Include="SceneSimulator.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SceneRenderer.h" />
     <ClInclude Include="Ball.h" />

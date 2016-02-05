@@ -10,12 +10,13 @@
 #include <time.h>
 
 #include <iostream>
-#include "SceneRenderer.h"
+#include "SceneManager.h"
 #include "SceneInitialization.h"
+
 
 bool gRenderQuad;
 
-SceneRenderer * g_sceneRenderer;
+SceneManager * g_sceneManager;
 
 clock_t g_previousTime;
 float g_remainingTime;
@@ -32,14 +33,14 @@ void Update()
 	
 	while (g_remainingTime > FixedTimestepDelta)
 	{
-		g_sceneRenderer->SimulationUpdate(FixedTimestepDelta);
+		g_sceneManager->Update(FixedTimestepDelta);
 		g_remainingTime -= FixedTimestepDelta;
 	}
 }
 
 void Draw()
 {
-	g_sceneRenderer->Draw();
+	g_sceneManager->Draw();
 }
 
 // unused for now
@@ -92,7 +93,7 @@ int main(int argc, char *argv[])
 		printf("Error initializing GLEW! %s\n", glewGetErrorString(glewError));
 	}
 #endif
-	g_sceneRenderer = SceneInitialization::CreateScene(windowWidth, windowHeight);
+	g_sceneManager = SceneInitialization::CreateScene(windowWidth, windowHeight);
 
 	bool quit = false;
 #if !defined(__EMSCRIPTEN__)
@@ -126,7 +127,7 @@ int main(int argc, char *argv[])
 	emscripten_set_main_loop(MainLoop, 0, 1);
 #endif
 
-	delete g_sceneRenderer;
+	delete g_sceneManager;
 	SDL_Quit();
 
 	return 0;
