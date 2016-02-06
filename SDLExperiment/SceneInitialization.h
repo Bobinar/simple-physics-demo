@@ -61,12 +61,12 @@ namespace SceneInitialization
 		Shader* pDepthShader = new Shader(ShadowMapShader::vertexShaderString, ShadowMapShader::fragmentShaderString);
 
 		const float BallRadious = 0.1f;
-		const glm::vec3 BallStartPosition(0.0f, 1.0f, 0.5f);
+		const glm::vec3 BallStartPosition(0.0f, 1.0f, 0.25f);
 		Ball * pBall = new Ball(BallStartPosition, BallRadious, 20, 20);
 		Quad * pQuad = new Quad();
 
-		const glm::vec3 CameraPostion(0, 3, 5);
-		const glm::vec3 CameraLookAt(0, 0, 0);
+		const glm::vec3 CameraPostion(0, 2, 5);
+		const glm::vec3 CameraLookAt(0, 0.5f, 0);
 		const glm::vec3 CameraUp(0, 1, 0);
 		glm::mat4 viewMatrix(glm::lookAt(CameraPostion, CameraLookAt, CameraUp));
 
@@ -75,17 +75,17 @@ namespace SceneInitialization
 		const float FarDistance = 10.f;
 		glm::mat4 projectionMatrix(glm::perspective<float>(FOV, ((float)width) / height, NearDistance, FarDistance));
 
-		glm::vec3 lightPosition(0.25f, 1.5f, 1.0f);
+		glm::vec3 lightPosition(0.25f, 1.65f, 1.0f);
 
-		const float DepthFOV = glm::pi<float>() * 0.33f;
-		const float DepthNearDistance = 0.5f;
-		const float DepthFarDistance = 5.0f;
+		const float DepthFOV = glm::pi<float>() * 0.35f;
+		const float DepthNearDistance = 1.0f;
+		const float DepthFarDistance = 3.0f;
 		const float DepthAspectRatio = 1.0f;
 		glm::mat4 depthProjectionMatrix = glm::perspective<float>(DepthFOV, DepthAspectRatio, DepthNearDistance, DepthFarDistance);
 
-		glm::vec3 lightLookAt(0, 0, 0);
+		glm::vec3 lightLookAt(0, 0, 1);
 		glm::vec3 lightUp(0, 1, 0);
-		glm::mat4 depthViewMatrix = glm::lookAt(lightPosition, lightLookAt, lightUp);
+		glm::mat4 depthViewMatrix = glm::lookAt(lightPosition + glm::vec3(0,1,0), lightLookAt, lightUp);
 
 		glm::mat4 m_lightSpaceViewProjectionMatrix = depthProjectionMatrix * depthViewMatrix;
 

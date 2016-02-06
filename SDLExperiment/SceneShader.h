@@ -41,7 +41,7 @@ namespace SceneShader
 		"   float lightDot = dot(normalize(distanceVector), normalize(worldNormal))*0.5 + 0.5;  //Half N dot L     \n"
 		"   vec4 normalizedLightSpaceProjectedCoords = (lightSpaceProjectedCoords / lightSpaceProjectedCoords.w)*0.5 +0.5;\n"
 		"   const float Bias = -0.01;\n"
-		"   float visibility = ((texture2D(shadowMap, normalizedLightSpaceProjectedCoords.xy).x) < (normalizedLightSpaceProjectedCoords.z + Bias)) ? 0.2 : 1.0; \n"
+		"   float visibility = ((texture2D(shadowMap, normalizedLightSpaceProjectedCoords.xy).x) < (normalizedLightSpaceProjectedCoords.z + Bias)) ? 0.7 : 1.0; \n"
 		"	gl_FragColor = clamp(distanceAttenuation * lightDot +0.15,0.0,1.0)  * vec4 (1.0, 1.0, 1.0, 1.0 ) * visibility;\n"
 		"}                                            \n";
 }

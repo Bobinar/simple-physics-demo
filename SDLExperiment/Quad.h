@@ -17,7 +17,7 @@ public:
 	
 	Quad()
 		: z(0)
-		, halfWidth(1)
+		, halfWidth(3)
 	{
 		static const GLfloat g_vertex_buffer_data[] = {
 			-halfWidth,-halfWidth,z,
