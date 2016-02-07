@@ -44,12 +44,10 @@ public:
 
 	void ShootSphere(int x, int y)
 	{
-		if (m_spheres.size() > 0)
-		{
-			Sphere * pSphere = *(m_spheres.begin());
-
-			pSphere->Position = m_pSceneRenderer->UnprojectScreenCoordinateAt(x, y);
-			pSphere->Speed = glm::vec3(0, 0, -1);
-		}
+		glm::vec3 position = m_pSceneRenderer->UnprojectScreenCoordinateAt(x, y);
+		glm::vec3 speed = glm::vec3(0, 0, -1);
+		Sphere * pSphere = new Sphere(position, RenderConstants::SphereRadius);
+		pSphere->Speed = speed;
+		AddSphere(pSphere);
 	}
 };

@@ -83,12 +83,12 @@ namespace SceneInitialization
 
 		glm::mat4 m_lightSpaceViewProjectionMatrix = depthProjectionMatrix * depthViewMatrix;
 
-		const float SphereRadious = 0.1f;
+		
 		const glm::vec3 SphereStartPosition(0.0f, 1.0f, 0.25f);
-		Sphere * pSphere = new Sphere(SphereStartPosition, SphereRadious);
+		Sphere * pSphere = new Sphere(SphereStartPosition, RenderConstants::SphereRadius);
 
 		const int SphereMeshRingsAndSectors = 20;
-		SphereMesh * pSphereMesh = new SphereMesh(SphereRadious, SphereMeshRingsAndSectors, SphereMeshRingsAndSectors);
+		SphereMesh * pSphereMesh = new SphereMesh(RenderConstants::SphereRadius, SphereMeshRingsAndSectors, SphereMeshRingsAndSectors);
 
 		const float QuadHalfWidth = 3;
 		const float QuadZ = 0;
