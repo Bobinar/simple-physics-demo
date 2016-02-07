@@ -165,6 +165,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Drawable.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="SceneInitialization.h" />
     <ClInclude Include="SceneManager.h" />
@@ -177,7 +178,7 @@
     <ClInclude Include="ShaderFactory.h" />
     <ClInclude Include="ShadowMapShader.h" />
     <ClInclude Include="SphereMesh.h" />
-    <ClInclude Include="Quad.h" />
+    <ClInclude Include="QuadMesh.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

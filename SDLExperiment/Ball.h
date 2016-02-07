@@ -5,7 +5,6 @@
 class Ball
 {
 private:
-	SphereMesh m_sphereMesh;
 	float m_mass;
 
 public:
@@ -14,9 +13,8 @@ public:
 	glm::vec3 Position;
 	float Radius;
 
-	Ball(const glm::vec3 &position, float radius, unsigned int rings, unsigned int sectors)
-		: m_sphereMesh(radius, rings, sectors)
-		, Position(position)
+	Ball(const glm::vec3 &position, float radius)
+		: Position(position)
 		, Radius(radius)
 		, m_mass(1.0f)
 		, Speed(0,0,0)
@@ -42,8 +40,4 @@ public:
 		Position = newPosition;
 	}
 
-	void Draw() const
-	{
-		m_sphereMesh.Draw();
-	}
 };

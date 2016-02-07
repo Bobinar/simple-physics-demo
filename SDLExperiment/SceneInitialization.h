@@ -58,12 +58,7 @@ namespace SceneInitialization
 
 		Shader* pSceneShader = new Shader(SceneShader::vertexShaderString, SceneShader::fragmentShaderString);
 		Shader* pDepthShader = new Shader(ShadowMapShader::vertexShaderString, ShadowMapShader::fragmentShaderString);
-
-		const float BallRadious = 0.1f;
-		const glm::vec3 BallStartPosition(0.0f, 1.0f, 0.25f);
-		Ball * pBall = new Ball(BallStartPosition, BallRadious, 20, 20);
-		Quad * pQuad = new Quad();
-
+		
 		const glm::vec3 CameraPostion(0, 2, 5);
 		const glm::vec3 CameraLookAt(0, 0.5f, 0);
 		const glm::vec3 CameraUp(0, 1, 0);
@@ -88,12 +83,24 @@ namespace SceneInitialization
 
 		glm::mat4 m_lightSpaceViewProjectionMatrix = depthProjectionMatrix * depthViewMatrix;
 
+		const float BallRadious = 0.1f;
+		const glm::vec3 BallStartPosition(0.0f, 1.0f, 0.25f);
+		Ball * pBall = new Ball(BallStartPosition, BallRadious);
+
+		const int SphereMeshRingsAndSectors = 20;
+		SphereMesh * pSphereMesh = new SphereMesh(BallRadious, SphereMeshRingsAndSectors, SphereMeshRingsAndSectors);
+
+		const float QuadHalfWidth = 3;
+		const float QuadZ = 0;
+		QuadMesh * pQuadMesh = new QuadMesh(QuadHalfWidth, QuadZ);
+
 		SceneRenderer * pSceneRenderer = new SceneRenderer(
 			width,
 			height,
 			pSceneShader,
 			pDepthShader,
-			pQuad,
+			pQuadMesh,
+			pSphereMesh,
 			viewMatrix,
 			projectionMatrix,
 			m_lightSpaceViewProjectionMatrix,

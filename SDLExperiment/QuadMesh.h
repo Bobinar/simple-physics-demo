@@ -1,9 +1,10 @@
 #pragma once
 #include <gl/glew.h>
 #include "RenderConstants.h"
+#include "Drawable.h"
 
 // Quad contained in the XY plane at z = 0
-class Quad
+class QuadMesh : public Drawable
 {
 private:
 	GLuint m_vertexBuffer;
@@ -11,13 +12,7 @@ private:
 	GLuint m_indicesBuffer;
 
 public:
-
-	float z;
-	float halfWidth;
-	
-	Quad()
-		: z(0)
-		, halfWidth(3)
+	QuadMesh(float halfWidth, float z)
 	{
 		static const GLfloat g_vertex_buffer_data[] = {
 			-halfWidth,-halfWidth,z,
@@ -50,7 +45,7 @@ public:
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 	}
 
-	~Quad()
+	~QuadMesh()
 	{
 		glDeleteBuffers(1, &m_vertexBuffer);
 		glDeleteBuffers(1, &m_normalBuffer);

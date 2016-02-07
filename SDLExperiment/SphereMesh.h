@@ -1,6 +1,7 @@
 #pragma once
 #include <gl/glew.h>
 #include <vector>
+#include "Drawable.h"
 
 // from http://stackoverflow.com/questions/5988686/creating-a-3d-sphere-in-opengl-using-visual-c
 
@@ -39,7 +40,7 @@ void createSphere(std::vector<glm::vec3>& vertices, std::vector<GLushort>& indic
 }
 
 
-class SphereMesh
+class SphereMesh : public Drawable
 {
 private:
 	GLuint m_vertexBuffer;

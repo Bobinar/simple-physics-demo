@@ -5,7 +5,7 @@
 #include "glm/gtc/matrix_transform.hpp" 
 #include "glm/gtc/constants.hpp" 
 #include <glm/gtc/type_ptr.hpp>
-#include "Quad.h"
+#include "QuadMesh.h"
 #include "Shader.h"
 #include "Ball.h"
 #include "SceneShader.h"
@@ -18,13 +18,26 @@ private:
 	const Shader* m_pSceneShader;
 	const Shader* m_pDepthShader;
 	const glm::mat4 m_viewMatrix, m_projectionMatrix;
-	Quad* m_pQuad;
+	QuadMesh* m_pQuadMesh;
+	SphereMesh* m_pSphereMesh;
 	
 	const glm::vec3 m_lightPosition;
 	GLuint m_depthTexture;
 	GLuint m_shadowMapFramebufferName;
 	glm::mat4 m_lightSpaceViewProjectionMatrix;
 	GLuint m_shadowMapID;
+
+	void DrawWalls(const Shader &shader) const
+	{
+		// Wall only needs brought up 1.0 (to sit on the origin)
+		glm::mat4 wallModelMatrix = glm::translate(glm::mat4(), glm::vec3(0, 1, 0));
+		Draw(shader, wallModelMatrix, m_pQuadMesh);
+
+		glm::mat4 floorModelTranslationMatrix = glm::translate(glm::mat4(), glm::vec3(0, 0, 1));
+		glm::mat4 floorModelRotationMatrix = glm::rotate(glm::mat4(), glm::pi<float>() * -0.5f, glm::vec3(1, 0, 0));
+		glm::mat4 onGroundTransform = floorModelTranslationMatrix  * floorModelRotationMatrix;
+		Draw(shader, onGroundTransform, m_pQuadMesh);
+	}
 
 public:
 
@@ -33,7 +46,8 @@ public:
 		GLuint height,
 		const Shader* pSceneShader,
 		const Shader* pDepthShader,
-		Quad * pQuad,
+		QuadMesh * pQuadMesh,
+		SphereMesh * pSphereMesh,
 		const glm::mat4 &viewMatrix,
 		const glm::mat4 &projectionMatrix,
 		const glm::mat4 &lightSpaceViewProjectionMatrix,
@@ -47,7 +61,8 @@ public:
 		, m_viewMatrix(viewMatrix)
 		, m_projectionMatrix(projectionMatrix)
 		, m_lightSpaceViewProjectionMatrix(lightSpaceViewProjectionMatrix)
-		, m_pQuad(pQuad)
+		, m_pQuadMesh(pQuadMesh)
+		, m_pSphereMesh(pSphereMesh)
 		, m_lightPosition(lightPosition)
 		, m_depthTexture(depthTexture)
 		, m_shadowMapFramebufferName(shadowMapFramebufferName)
@@ -57,12 +72,13 @@ public:
 
 	~SceneRenderer()
 	{
-		delete m_pQuad;
+		delete m_pQuadMesh;
+		delete m_pSphereMesh;
 		delete m_pSceneShader;
 		delete m_pDepthShader;
 	}
 
-	void DrawSphere(const Shader &shader, glm::mat4 modelMatrix, Ball * pBall) const
+	void Draw(const Shader &shader, glm::mat4 modelMatrix, Drawable * pDrawable) const
 	{
 		glm::mat4 MV = m_viewMatrix * modelMatrix;
 		glm::mat4 MVP = m_projectionMatrix * MV;
@@ -76,24 +92,7 @@ public:
 		glUniformMatrix4fv(MVMatrixId, 1, GL_FALSE, &modelMatrix[0][0]);
 		glUniformMatrix4fv(lightMVPMatrixId, 1, GL_FALSE, &lightMVP[0][0]);
 
-		pBall->Draw();
-	}
-
-	void DrawQuad(const Shader &shader, glm::mat4 modelMatrix) const 
-	{
-		glm::mat4 MV = m_viewMatrix * modelMatrix;
-		glm::mat4 MVP = m_projectionMatrix * MV;
-		glm::mat4 lightMVP = m_lightSpaceViewProjectionMatrix * modelMatrix;
-
-		GLuint MVPMatrixId = glGetUniformLocation(shader.ProgramObject, "MVP");
-		GLuint MMatrixId = glGetUniformLocation(shader.ProgramObject, "M");
-		GLuint lightMVPMatrixId = glGetUniformLocation(shader.ProgramObject, "lightMVP");
-
-		glUniformMatrix4fv(MVPMatrixId, 1, GL_FALSE, &MVP[0][0]);
-		glUniformMatrix4fv(MMatrixId, 1, GL_FALSE, &modelMatrix[0][0]);
-		glUniformMatrix4fv(lightMVPMatrixId, 1, GL_FALSE, &lightMVP[0][0]);
-
-		m_pQuad->Draw();
+		pDrawable->Draw();
 	}
 
 	void Draw(std::vector<Ball*> &spheres) const
@@ -117,19 +116,12 @@ public:
 		
 		glUniform3fv(worldLightPositionUniform, 1, glm::value_ptr(m_lightPosition));
 
-		// Wall only needs brought up 1.0 (to sit on the origin)
-		glm::mat4 wallModelMatrix = glm::translate(glm::mat4(), glm::vec3(0, 1, 0));
-		DrawQuad(*m_pSceneShader, wallModelMatrix);
-
-		glm::mat4 floorModelTranslationMatrix = glm::translate(glm::mat4(), glm::vec3(0, 0, 1));
-		glm::mat4 floorModelRotationMatrix = glm::rotate(glm::mat4(), glm::pi<float>() * -0.5f, glm::vec3(1, 0, 0));
-		glm::mat4 onGroundTransform = floorModelTranslationMatrix  * floorModelRotationMatrix;
-		DrawQuad(*m_pSceneShader, onGroundTransform);
+		DrawWalls(*m_pSceneShader);
 		
 		for (std::vector<Ball *>::iterator it = spheres.begin(); it != spheres.end(); ++it)
 		{
 			glm::mat4 sphereModelMatrix = glm::translate(glm::mat4(), (*it)->Position);
-			DrawSphere(*m_pSceneShader, sphereModelMatrix, (*it));
+			Draw(*m_pSceneShader, sphereModelMatrix, m_pSphereMesh);
 		}
 	}
 
@@ -148,9 +140,8 @@ public:
 		{
 			glm::mat4 sphereModelMatrix = glm::translate(glm::mat4(), (*it)->Position);
 			glm::mat4 depthMVP = m_lightSpaceViewProjectionMatrix * sphereModelMatrix;
-		
 			glUniformMatrix4fv(MVPMatrixId, 1, GL_FALSE, &depthMVP[0][0]);
-			(*it)->Draw();
+			m_pSphereMesh->Draw();
 		}
 
 		assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
