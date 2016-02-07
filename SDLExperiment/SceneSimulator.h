@@ -25,6 +25,10 @@ public:
 
 	~SceneSimulator()
 	{
+		for (std::vector<Plane *>::iterator it = m_planes.begin(); it != m_planes.end(); ++it)
+		{
+			delete (*it);
+		}
 	}
 
 	void AddPlane(Plane * plane)
