@@ -48,7 +48,7 @@ public:
 		{
 			Sphere * pSphere = *(m_spheres.begin());
 
-			pSphere->Position = glm::vec3(0, 1, 2);
+			pSphere->Position = m_pSceneRenderer->UnprojectScreenCoordinateAt(x, y);
 			pSphere->Speed = glm::vec3(0, 0, -1);
 		}
 	}

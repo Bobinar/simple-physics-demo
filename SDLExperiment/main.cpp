@@ -12,6 +12,7 @@
 #include <iostream>
 #include "SceneManager.h"
 #include "SceneInitialization.h"
+#include "RenderConstants.h"
 
 
 SceneManager * g_sceneManager;
@@ -42,13 +43,17 @@ void Draw()
 	g_sceneManager->Draw();
 }
 
-void handleKeys(unsigned char key, int x, int y)
+void HandleKeys(unsigned char key, int x, int y)
 {
 	if (key == 's')
 	{
 		g_sceneManager->ShootSphere(x,y);
-		printf("%d, %d", x, y);
 	}
+}
+
+void HandleMouseUp(int x, int y)
+{
+	g_sceneManager->ShootSphere(x, y);
 }
 
 void MainLoop()
@@ -60,12 +65,18 @@ void MainLoop()
 		{
 			g_quit = true;
 		}
-
 		else if (e.type == SDL_TEXTINPUT)
 		{
 			int x = 0, y = 0;
 			SDL_GetMouseState(&x, &y);
-			handleKeys(e.text.text[0], x, y);
+			HandleKeys(e.text.text[0], x, y);
+		}
+		else if (e.type == SDL_MOUSEBUTTONUP)
+		{
+			SDL_MouseButtonEvent *m = (SDL_MouseButtonEvent*)&e;
+			int x = 0, y = 0;
+			SDL_GetMouseState(&x, &y);
+			HandleMouseUp(x, y);
 		}
 	}
 
@@ -85,11 +96,11 @@ int main(int argc, char *argv[])
 
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1); 
 
-	GLuint windowWidth = 800;
-	GLuint windowHeight = 800;
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
 
+	GLuint windowWidth = 800;
+	GLuint windowHeight = 800;
 	window = SDL_CreateWindow("Simple Physics Demo", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowWidth, windowHeight, SDL_WINDOW_OPENGL);
 	if (!window) {
 		printf("Unable to create window: %s\n", SDL_GetError());

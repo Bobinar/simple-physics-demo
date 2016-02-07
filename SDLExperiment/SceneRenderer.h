@@ -147,8 +147,13 @@ public:
 		assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
 	}
 
-	glm::vec3 UnprojectScreenCoordinateAt(glm::vec3 &screenCoordinates)
+	glm::vec3 UnprojectScreenCoordinateAt(int x, int y)
 	{
-		return glm::vec3();
+		const float SimulationSpaceDepth = 0.97f;
+		glm::vec3 screenCoordinatesWithInvertedY(x, m_height - y, SimulationSpaceDepth);
+		
+		glm::vec4 viewport(0, 0, m_width, m_height);
+		glm::vec3 unprojectedCoords = glm::unProject(screenCoordinatesWithInvertedY, m_viewMatrix, m_projectionMatrix, viewport);
+		return unprojectedCoords;
 	}
 };
