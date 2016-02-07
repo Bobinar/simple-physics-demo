@@ -19,7 +19,7 @@ private:
 	const Shader* m_pDepthShader;
 	const glm::mat4 m_viewMatrix, m_projectionMatrix;
 	Quad* m_pQuad;
-	Ball* m_pBall;
+	
 	const glm::vec3 m_lightPosition;
 	GLuint m_depthTexture;
 	GLuint m_shadowMapFramebufferName;
@@ -27,12 +27,12 @@ private:
 	GLuint m_shadowMapID;
 
 public:
+
 	SceneRenderer(
 		GLuint width,
 		GLuint height,
 		const Shader* pSceneShader,
 		const Shader* pDepthShader,
-		Ball * pBall,
 		Quad * pQuad,
 		const glm::mat4 &viewMatrix,
 		const glm::mat4 &projectionMatrix,
@@ -47,7 +47,6 @@ public:
 		, m_viewMatrix(viewMatrix)
 		, m_projectionMatrix(projectionMatrix)
 		, m_lightSpaceViewProjectionMatrix(lightSpaceViewProjectionMatrix)
-		, m_pBall(pBall)
 		, m_pQuad(pQuad)
 		, m_lightPosition(lightPosition)
 		, m_depthTexture(depthTexture)
@@ -58,13 +57,12 @@ public:
 
 	~SceneRenderer()
 	{
-		delete m_pBall; //TODO: handle lifetime of scene elements in SceneManager
 		delete m_pQuad;
 		delete m_pSceneShader;
 		delete m_pDepthShader;
 	}
 
-	void DrawSphere(const Shader &shader, glm::mat4 modelMatrix) const
+	void DrawSphere(const Shader &shader, glm::mat4 modelMatrix, Ball * pBall) const
 	{
 		glm::mat4 MV = m_viewMatrix * modelMatrix;
 		glm::mat4 MVP = m_projectionMatrix * MV;
@@ -78,7 +76,7 @@ public:
 		glUniformMatrix4fv(MVMatrixId, 1, GL_FALSE, &modelMatrix[0][0]);
 		glUniformMatrix4fv(lightMVPMatrixId, 1, GL_FALSE, &lightMVP[0][0]);
 
-		m_pBall->Draw();
+		pBall->Draw();
 	}
 
 	void DrawQuad(const Shader &shader, glm::mat4 modelMatrix) const 
@@ -98,9 +96,9 @@ public:
 		m_pQuad->Draw();
 	}
 
-	void Draw() const
+	void Draw(std::vector<Ball*> &spheres) const
 	{
-		DrawShadowMap();
+		DrawShadowMap(spheres);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		
@@ -128,11 +126,14 @@ public:
 		glm::mat4 onGroundTransform = floorModelTranslationMatrix  * floorModelRotationMatrix;
 		DrawQuad(*m_pSceneShader, onGroundTransform);
 		
-		glm::mat4 sphereModelMatrix = glm::translate(glm::mat4(), m_pBall->Position);
-		DrawSphere(*m_pSceneShader, sphereModelMatrix);
+		for (std::vector<Ball *>::iterator it = spheres.begin(); it != spheres.end(); ++it)
+		{
+			glm::mat4 sphereModelMatrix = glm::translate(glm::mat4(), (*it)->Position);
+			DrawSphere(*m_pSceneShader, sphereModelMatrix, (*it));
+		}
 	}
 
-	void DrawShadowMap() const
+	void DrawShadowMap(std::vector<Ball*> &spheres) const
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, m_shadowMapFramebufferName);
 		glViewport(0, 0, RenderConstants::ShadowMapResolution, RenderConstants::ShadowMapResolution);
@@ -141,14 +142,22 @@ public:
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glUseProgram(m_pDepthShader->ProgramObject);
-
-		glm::mat4 sphereModelMatrix = glm::translate(glm::mat4(), m_pBall->Position);
-		glm::mat4 depthMVP = m_lightSpaceViewProjectionMatrix * sphereModelMatrix;
-
 		GLuint MVPMatrixId = glGetUniformLocation(m_pDepthShader->ProgramObject, "MVP");
-		glUniformMatrix4fv(MVPMatrixId, 1, GL_FALSE, &depthMVP[0][0]);
-		m_pBall->Draw();
+
+		for (std::vector<Ball *>::iterator it = spheres.begin(); it != spheres.end(); ++it)
+		{
+			glm::mat4 sphereModelMatrix = glm::translate(glm::mat4(), (*it)->Position);
+			glm::mat4 depthMVP = m_lightSpaceViewProjectionMatrix * sphereModelMatrix;
+		
+			glUniformMatrix4fv(MVPMatrixId, 1, GL_FALSE, &depthMVP[0][0]);
+			(*it)->Draw();
+		}
 
 		assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
+	}
+
+	glm::vec3 UnprojectScreenCoordinateAt(glm::vec3 &screenCoordinates)
+	{
+		return glm::vec3();
 	}
 };

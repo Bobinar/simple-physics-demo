@@ -16,7 +16,6 @@ class SceneSimulator
 {
 private:
 	std::vector<Plane*> m_planes;
-	std::vector<Ball*> m_spheres;
 
 public:
 	SceneSimulator()
@@ -33,11 +32,6 @@ public:
 		m_planes.push_back(plane);
 	}
 
-	void AddSphere(Ball * sphere)
-	{
-		m_spheres.push_back(sphere);
-	}
-	
 	void DetectAndResolvePlaneSphereCollision(Plane& plane, Ball & sphere)
 	{
 		float distanceToPlane =  DistPointPlane(sphere.Position, plane);
@@ -58,16 +52,16 @@ public:
 		//TODO: friction
 	}
 
-	void Update(float deltaTime)
+	void Update(float deltaTime, std::vector<Ball*> &spheres)
 	{
-		for (std::vector<Ball*>::iterator it = m_spheres.begin(); it != m_spheres.end(); ++it)
+		for (std::vector<Ball*>::iterator it = spheres.begin(); it != spheres.end(); ++it)
 		{
 			(*it)->Update(deltaTime);
 		}
 
 		for (std::vector<Plane*>::iterator itA = m_planes.begin(); itA != m_planes.end(); ++itA)
 		{
-			for (std::vector<Ball*>::iterator itB = m_spheres.begin(); itB != m_spheres.end(); ++itB)
+			for (std::vector<Ball*>::iterator itB = spheres.begin(); itB != spheres.end(); ++itB)
 			{
 				DetectAndResolvePlaneSphereCollision(**itA, **itB);
 			}

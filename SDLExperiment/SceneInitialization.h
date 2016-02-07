@@ -36,13 +36,12 @@ namespace
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
 	}
 
-	SceneSimulator * CreateSimulator(Ball * pBall)
+	SceneSimulator * CreateSimulator()
 	{
 		SceneSimulator * pSceneSimulator = new SceneSimulator();
 
 		pSceneSimulator->AddPlane(new Plane(glm::vec3(0, 1, 0), 0));
 		pSceneSimulator->AddPlane(new Plane(glm::vec3(0, 0, 1), 0));
-		pSceneSimulator->AddSphere(pBall);
 
 		return pSceneSimulator;
 	}
@@ -94,7 +93,6 @@ namespace SceneInitialization
 			height,
 			pSceneShader,
 			pDepthShader,
-			pBall,
 			pQuad,
 			viewMatrix,
 			projectionMatrix,
@@ -103,9 +101,13 @@ namespace SceneInitialization
 			depthTexture,
 			shadowMapFramebufferName);
 
-		SceneSimulator * pSceneSimulator = CreateSimulator(pBall);
+		SceneSimulator * pSceneSimulator = CreateSimulator();
 
-		return new SceneManager(pSceneRenderer, pSceneSimulator);
+		SceneManager * pSceneManager = new SceneManager(pSceneRenderer, pSceneSimulator);
+
+		pSceneManager->AddBall(pBall);
+
+		return pSceneManager;
 	}
 		
 }

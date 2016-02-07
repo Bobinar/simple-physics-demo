@@ -14,12 +14,11 @@
 #include "SceneInitialization.h"
 
 
-bool gRenderQuad;
-
 SceneManager * g_sceneManager;
 
 clock_t g_previousTime;
 float g_remainingTime;
+bool g_quit = false;
 
 void Update()
 {
@@ -43,17 +42,32 @@ void Draw()
 	g_sceneManager->Draw();
 }
 
-// unused for now
 void handleKeys(unsigned char key, int x, int y)
 {
-	if (key == 'q')
+	if (key == 's')
 	{
-		gRenderQuad = !gRenderQuad;
+		g_sceneManager->ShootSphere(x,y);
 	}
 }
 
 void MainLoop()
 {
+	SDL_Event e;
+	while (SDL_PollEvent(&e) != 0)
+	{
+		if (e.type == SDL_QUIT)
+		{
+			g_quit = true;
+		}
+
+		else if (e.type == SDL_TEXTINPUT)
+		{
+			int x = 0, y = 0;
+			SDL_GetMouseState(&x, &y);
+			handleKeys(e.text.text[0], x, y);
+		}
+	}
+
 	Update();
 	Draw();
 }
@@ -93,39 +107,22 @@ int main(int argc, char *argv[])
 		printf("Error initializing GLEW! %s\n", glewGetErrorString(glewError));
 	}
 #endif
+
 	g_sceneManager = SceneInitialization::CreateScene(windowWidth, windowHeight);
-
-	bool quit = false;
-#if !defined(__EMSCRIPTEN__)
-	SDL_Event e;
-
+		
 	SDL_StartTextInput();
-	while (!quit)
+
+#if !defined(__EMSCRIPTEN__)
+	while (!g_quit)
 	{
-		while (SDL_PollEvent(&e) != 0)
-		{
-			if (e.type == SDL_QUIT)
-			{
-				quit = true;
-			}
-
-			else if (e.type == SDL_TEXTINPUT)
-			{
-				int x = 0, y = 0;
-				SDL_GetMouseState(&x, &y);
-				handleKeys(e.text.text[0], x, y);
-			}
-		}
-
 		MainLoop();
-
 		SDL_GL_SwapWindow(window);
 	}
-	
-	SDL_StopTextInput();
 #else
 	emscripten_set_main_loop(MainLoop, 0, 1);
 #endif
+
+	SDL_StopTextInput();
 
 	delete g_sceneManager;
 	SDL_Quit();
