@@ -32,7 +32,7 @@ public:
 		m_planes.push_back(plane);
 	}
 
-	void DetectAndResolvePlaneSphereCollision(Plane& plane, Ball & sphere)
+	void DetectAndResolvePlaneSphereCollision(Plane& plane, Sphere & sphere)
 	{
 		float distanceToPlane =  DistPointPlane(sphere.Position, plane);
 		if (distanceToPlane > sphere.Radius)
@@ -52,16 +52,16 @@ public:
 		//TODO: friction
 	}
 
-	void Update(float deltaTime, std::vector<Ball*> &spheres)
+	void Update(float deltaTime, std::vector<Sphere*> &spheres)
 	{
-		for (std::vector<Ball*>::iterator it = spheres.begin(); it != spheres.end(); ++it)
+		for (std::vector<Sphere*>::iterator it = spheres.begin(); it != spheres.end(); ++it)
 		{
 			(*it)->Update(deltaTime);
 		}
 
 		for (std::vector<Plane*>::iterator itA = m_planes.begin(); itA != m_planes.end(); ++itA)
 		{
-			for (std::vector<Ball*>::iterator itB = spheres.begin(); itB != spheres.end(); ++itB)
+			for (std::vector<Sphere*>::iterator itB = spheres.begin(); itB != spheres.end(); ++itB)
 			{
 				DetectAndResolvePlaneSphereCollision(**itA, **itB);
 			}

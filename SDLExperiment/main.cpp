@@ -47,6 +47,7 @@ void handleKeys(unsigned char key, int x, int y)
 	if (key == 's')
 	{
 		g_sceneManager->ShootSphere(x,y);
+		printf("%d, %d", x, y);
 	}
 }
 

@@ -7,7 +7,7 @@ class SceneManager
 {
 	SceneRenderer * m_pSceneRenderer;
 	SceneSimulator * m_pSceneSimulator;
-	std::vector<Ball*> m_balls;
+	std::vector<Sphere*> m_spheres;
 
 public:
 	SceneManager(SceneRenderer *pSceneRenderer, SceneSimulator *pSceneSimulator)
@@ -21,7 +21,7 @@ public:
 		delete m_pSceneRenderer;
 		delete m_pSceneSimulator;
 		
-		for (std::vector<Ball *>::iterator it = m_balls.begin(); it != m_balls.end(); ++it)
+		for (std::vector<Sphere *>::iterator it = m_spheres.begin(); it != m_spheres.end(); ++it)
 		{
 			delete (*it);
 		}
@@ -29,27 +29,27 @@ public:
 
 	void Update(float deltaTime)
 	{
-		m_pSceneSimulator->Update(deltaTime, m_balls);
+		m_pSceneSimulator->Update(deltaTime, m_spheres);
 	}
 
 	void Draw()
 	{
-		m_pSceneRenderer->Draw(m_balls);
+		m_pSceneRenderer->Draw(m_spheres);
 	}
 
-	void AddBall(Ball * pBall)
+	void AddSphere(Sphere * pSphere)
 	{
-		m_balls.push_back(pBall);
+		m_spheres.push_back(pSphere);
 	}
 
 	void ShootSphere(int x, int y)
 	{
-		if (m_balls.size() > 0)
+		if (m_spheres.size() > 0)
 		{
-			Ball * pBall = *(m_balls.begin());
+			Sphere * pSphere = *(m_spheres.begin());
 
-			pBall->Position = glm::vec3(0, 1, 2);
-			pBall->Speed = glm::vec3(0, 0, -1);
+			pSphere->Position = glm::vec3(0, 1, 2);
+			pSphere->Speed = glm::vec3(0, 0, -1);
 		}
 	}
 };

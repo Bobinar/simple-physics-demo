@@ -7,7 +7,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "QuadMesh.h"
 #include "Shader.h"
-#include "Ball.h"
+#include "Sphere.h"
 #include "SceneShader.h"
 #include "ShadowMapShader.h"
 
@@ -95,7 +95,7 @@ public:
 		pDrawable->Draw();
 	}
 
-	void Draw(std::vector<Ball*> &spheres) const
+	void Draw(std::vector<Sphere*> &spheres) const
 	{
 		DrawShadowMap(spheres);
 
@@ -118,14 +118,14 @@ public:
 
 		DrawWalls(*m_pSceneShader);
 		
-		for (std::vector<Ball *>::iterator it = spheres.begin(); it != spheres.end(); ++it)
+		for (std::vector<Sphere *>::iterator it = spheres.begin(); it != spheres.end(); ++it)
 		{
 			glm::mat4 sphereModelMatrix = glm::translate(glm::mat4(), (*it)->Position);
 			Draw(*m_pSceneShader, sphereModelMatrix, m_pSphereMesh);
 		}
 	}
 
-	void DrawShadowMap(std::vector<Ball*> &spheres) const
+	void DrawShadowMap(std::vector<Sphere*> &spheres) const
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, m_shadowMapFramebufferName);
 		glViewport(0, 0, RenderConstants::ShadowMapResolution, RenderConstants::ShadowMapResolution);
@@ -136,7 +136,7 @@ public:
 		glUseProgram(m_pDepthShader->ProgramObject);
 		GLuint MVPMatrixId = glGetUniformLocation(m_pDepthShader->ProgramObject, "MVP");
 
-		for (std::vector<Ball *>::iterator it = spheres.begin(); it != spheres.end(); ++it)
+		for (std::vector<Sphere *>::iterator it = spheres.begin(); it != spheres.end(); ++it)
 		{
 			glm::mat4 sphereModelMatrix = glm::translate(glm::mat4(), (*it)->Position);
 			glm::mat4 depthMVP = m_lightSpaceViewProjectionMatrix * sphereModelMatrix;

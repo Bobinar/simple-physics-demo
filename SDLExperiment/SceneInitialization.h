@@ -2,7 +2,7 @@
 #include "SceneRenderer.h"
 #include "SceneManager.h"
 #include "Shader.h"
-#include "Ball.h"
+#include "Sphere.h"
 #include "RenderConstants.h"
 #include "SceneSimulator.h"
 #include "glm/vec3.hpp" 
@@ -83,12 +83,12 @@ namespace SceneInitialization
 
 		glm::mat4 m_lightSpaceViewProjectionMatrix = depthProjectionMatrix * depthViewMatrix;
 
-		const float BallRadious = 0.1f;
-		const glm::vec3 BallStartPosition(0.0f, 1.0f, 0.25f);
-		Ball * pBall = new Ball(BallStartPosition, BallRadious);
+		const float SphereRadious = 0.1f;
+		const glm::vec3 SphereStartPosition(0.0f, 1.0f, 0.25f);
+		Sphere * pSphere = new Sphere(SphereStartPosition, SphereRadious);
 
 		const int SphereMeshRingsAndSectors = 20;
-		SphereMesh * pSphereMesh = new SphereMesh(BallRadious, SphereMeshRingsAndSectors, SphereMeshRingsAndSectors);
+		SphereMesh * pSphereMesh = new SphereMesh(SphereRadious, SphereMeshRingsAndSectors, SphereMeshRingsAndSectors);
 
 		const float QuadHalfWidth = 3;
 		const float QuadZ = 0;
@@ -112,7 +112,7 @@ namespace SceneInitialization
 
 		SceneManager * pSceneManager = new SceneManager(pSceneRenderer, pSceneSimulator);
 
-		pSceneManager->AddBall(pBall);
+		pSceneManager->AddSphere(pSphere);
 
 		return pSceneManager;
 	}

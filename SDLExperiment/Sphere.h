@@ -2,7 +2,7 @@
 #include "glm/vec3.hpp" 
 #include "SphereMesh.h"
 
-class Ball
+class Sphere
 {
 private:
 	float m_mass;
@@ -13,7 +13,7 @@ public:
 	glm::vec3 Position;
 	float Radius;
 
-	Ball(const glm::vec3 &position, float radius)
+	Sphere(const glm::vec3 &position, float radius)
 		: Position(position)
 		, Radius(radius)
 		, m_mass(1.0f)
