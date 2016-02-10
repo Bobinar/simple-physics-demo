@@ -2,15 +2,7 @@
 #include <vector>
 #include "glm/vec3.hpp" 
 #include "Plane.h"
-
-namespace
-{
-	float DistPointPlane(const glm::vec3 &point, const Plane &p)
-	{
-		return (glm::dot(p.Normal, point) - p.D) / glm::dot(p.Normal, p.Normal);
-	}
-}
-
+#include "IntersectionTests.h"
 
 class SceneSimulator
 {
@@ -38,7 +30,7 @@ public:
 
 	void DetectAndResolvePlaneSphereCollision(Plane& plane, Sphere & sphere)
 	{
-		float distanceToPlane =  DistPointPlane(sphere.Position, plane);
+		float distanceToPlane = IntersectionTests::DistPointPlane(sphere.Position, plane);
 		if (distanceToPlane > sphere.Radius)
 			return;
 

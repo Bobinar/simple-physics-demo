@@ -166,6 +166,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Drawable.h" />
+    <ClInclude Include="Frustum.h" />
+    <ClInclude Include="IntersectionTests.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="SceneInitialization.h" />
     <ClInclude Include="SceneManager.h" />

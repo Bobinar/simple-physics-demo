@@ -10,6 +10,7 @@
 #include "Sphere.h"
 #include "SceneShader.h"
 #include "ShadowMapShader.h"
+#include "Frustum.h"
 
 class SceneRenderer
 {
@@ -20,6 +21,7 @@ private:
 	const glm::mat4 m_viewMatrix, m_projectionMatrix;
 	QuadMesh* m_pQuadMesh;
 	SphereMesh* m_pSphereMesh;
+	Frustum m_frustum;
 	
 	const glm::vec3 m_lightPosition;
 	GLuint m_depthTexture;
@@ -66,6 +68,7 @@ public:
 		, m_lightPosition(lightPosition)
 		, m_depthTexture(depthTexture)
 		, m_shadowMapFramebufferName(shadowMapFramebufferName)
+		, m_frustum(projectionMatrix * viewMatrix)
 	{
 		m_shadowMapID = glGetUniformLocation(m_pSceneShader->ProgramObject, "shadowMap");
 	}
@@ -149,11 +152,16 @@ public:
 
 	glm::vec3 UnprojectScreenCoordinateAt(int x, int y)
 	{
-		const float SimulationSpaceDepth = 0.97f;
+		const float SimulationSpaceDepth = 0.50f;
 		glm::vec3 screenCoordinatesWithInvertedY(x, m_height - y, SimulationSpaceDepth);
 		
 		glm::vec4 viewport(0, 0, m_width, m_height);
 		glm::vec3 unprojectedCoords = glm::unProject(screenCoordinatesWithInvertedY, m_viewMatrix, m_projectionMatrix, viewport);
 		return unprojectedCoords;
+	}
+
+	bool IsInFrustum(glm::vec3 &position)
+	{
+		return m_frustum.IsInFrustum(position);
 	}
 };

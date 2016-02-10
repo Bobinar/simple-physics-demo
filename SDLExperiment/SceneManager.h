@@ -30,6 +30,20 @@ public:
 	void Update(float deltaTime)
 	{
 		m_pSceneSimulator->Update(deltaTime, m_spheres);
+		
+		int i = 0;
+		while (i < m_spheres.size())
+		{
+			if (!m_pSceneRenderer->IsInFrustum(m_spheres[i]->Position))
+			{
+				delete m_spheres[i];
+				m_spheres.erase(m_spheres.begin() + i);
+			}
+			else
+			{
+				i++;
+			}
+		}
 	}
 
 	void Draw()

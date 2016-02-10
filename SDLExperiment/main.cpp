@@ -2,14 +2,14 @@
 	#include <emscripten.h>
 #endif
 
-#include <SDL2/SDL.h>
-#include <gl\glew.h>
-#include <SDL2/SDL_opengl.h>
-
 #include <stdio.h>
 #include <time.h>
-
 #include <iostream>
+
+#include <gl\glew.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
+
 #include "SceneManager.h"
 #include "SceneInitialization.h"
 #include "RenderConstants.h"

@@ -65,7 +65,7 @@ namespace SceneInitialization
 		glm::mat4 viewMatrix(glm::lookAt(CameraPostion, CameraLookAt, CameraUp));
 
 		const float FOV = glm::pi<float>() * 0.25f;
-		const float NearDistance = 0.1f;
+		const float NearDistance = 1.5f;
 		const float FarDistance = 10.f;
 		glm::mat4 projectionMatrix(glm::perspective<float>(FOV, ((float)width) / height, NearDistance, FarDistance));
 
@@ -83,7 +83,6 @@ namespace SceneInitialization
 
 		glm::mat4 m_lightSpaceViewProjectionMatrix = depthProjectionMatrix * depthViewMatrix;
 
-		
 		const glm::vec3 SphereStartPosition(0.0f, 1.0f, 0.25f);
 		Sphere * pSphere = new Sphere(SphereStartPosition, RenderConstants::SphereRadius);
 
