@@ -15,7 +15,7 @@ public:
 
 	static Plane * CreateNormalisedPlane(glm::vec3 normal, float d)
 	{
-		float mag = normal.length();
+		float mag = (float) normal.length();
 		glm::vec3 normalisedNormal = normal / mag;
 		float normalisedD = d / mag;
 		return new Plane(normalisedNormal, normalisedD);

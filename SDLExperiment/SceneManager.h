@@ -31,7 +31,7 @@ public:
 	{
 		m_pSceneSimulator->Update(deltaTime, m_spheres);
 		
-		int i = 0;
+		size_t i = 0;
 		while (i < m_spheres.size())
 		{
 			if (!m_pSceneRenderer->IsInFrustum(m_spheres[i]->Position))

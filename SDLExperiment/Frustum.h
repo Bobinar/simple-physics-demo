@@ -10,7 +10,7 @@ class Frustum
 	std::vector<Plane*> m_planes;
 
 public:
-	Frustum(glm::mat4 &mat)
+	Frustum(glm::mat4 mat)
 	{
 		m_planes.resize(6);
 		// from: http://stackoverflow.com/questions/11789766/opengl-glm-calculating-frustum-problems
