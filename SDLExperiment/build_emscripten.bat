@@ -1,1 +1,1 @@
-emcc main.cpp -o Emscripten/main.html -s USE_SDL=2 -IC:\Tools\glm
+emcc main.cpp -o Emscripten/main.html -s USE_SDL=2 -I..\lib\glm
