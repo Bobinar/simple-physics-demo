@@ -1,7 +1,11 @@
 *.sdf
 .vs
 *.user
-Debug
-Release
 *.opensdf
-SDLExperiment/Emscripten
+*.db
+*.opendb
+/SDLExperiment/Emscripten
+/SDLExperiment/Debug
+/SDLExperiment/Release
+/Release
+/Debug
