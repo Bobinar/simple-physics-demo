@@ -10,6 +10,27 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\Drawable.h" />
+    <ClInclude Include="..\src\Frustum.h" />
+    <ClInclude Include="..\src\IntersectionTests.h" />
+    <ClInclude Include="..\src\Plane.h" />
+    <ClInclude Include="..\src\QuadMesh.h" />
+    <ClInclude Include="..\src\RenderConstants.h" />
+    <ClInclude Include="..\src\SceneInitialization.h" />
+    <ClInclude Include="..\src\SceneManager.h" />
+    <ClInclude Include="..\src\SceneRenderer.h" />
+    <ClInclude Include="..\src\SceneShader.h" />
+    <ClInclude Include="..\src\SceneSimulator.h" />
+    <ClInclude Include="..\src\Shader.h" />
+    <ClInclude Include="..\src\ShaderFactory.h" />
+    <ClInclude Include="..\src\ShadowMapShader.h" />
+    <ClInclude Include="..\src\Sphere.h" />
+    <ClInclude Include="..\src\SphereMesh.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\main.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E589D553-0567-4C5B-96FC-F2D0C802F4BC}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -88,27 +109,6 @@
       <AdditionalLibraryDirectories>..\lib\SDL2-2.0.4\lib\x86;..\lib\glew-1.13.0\lib\Release\Win32</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Drawable.h" />
-    <ClInclude Include="Frustum.h" />
-    <ClInclude Include="IntersectionTests.h" />
-    <ClInclude Include="Plane.h" />
-    <ClInclude Include="SceneInitialization.h" />
-    <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="SceneShader.h" />
-    <ClInclude Include="SceneSimulator.h" />
-    <ClInclude Include="Shader.h" />
-    <ClInclude Include="SceneRenderer.h" />
-    <ClInclude Include="Sphere.h" />
-    <ClInclude Include="RenderConstants.h" />
-    <ClInclude Include="ShaderFactory.h" />
-    <ClInclude Include="ShadowMapShader.h" />
-    <ClInclude Include="SphereMesh.h" />
-    <ClInclude Include="QuadMesh.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
