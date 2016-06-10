@@ -1,0 +1,1 @@
+g++ src/main.cpp -o main.a -Ilib/glm  -lGL -lGLEW -lm -lSDL2
