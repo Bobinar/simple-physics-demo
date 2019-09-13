@@ -18,7 +18,7 @@
 
 SceneManager * g_sceneManager;
 
-clock_t g_previousTime;
+std::chrono::time_point<std::chrono::system_clock> g_previousTime;
 float g_remainingTime;
 bool g_quit = false;
 
@@ -26,8 +26,8 @@ void Update()
 {
 	const float FixedTimestepDelta = 0.001f;
 
-	clock_t currentTime = clock();
-	float deltaTime = float(currentTime - g_previousTime) / (float)CLOCKS_PER_SEC;
+	auto currentTime = std::chrono::system_clock::now();
+	float deltaTime = std::chrono::duration_cast<std::chrono::microseconds>(currentTime-g_previousTime).count() * 0.000001f;
 	g_previousTime = currentTime;
 	
 	g_remainingTime += deltaTime;
@@ -110,7 +110,7 @@ int main(int argc, char *argv[])
 
 	context = SDL_GL_CreateContext(window);
 
-	g_previousTime = clock();
+	g_previousTime = std::chrono::system_clock::now();
 	g_remainingTime = 0;
 
 #if !defined(__EMSCRIPTEN__)

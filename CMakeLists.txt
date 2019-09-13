@@ -1,6 +1,8 @@
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 3.1)
 project (Tutorial)
 include_directories(src)
+
+set (CMAKE_CXX_STANDARD 11)
 
 if (WIN32)
 	set(CMAKE_PREFIX_PATH "lib/glew-1.13.0/include")
