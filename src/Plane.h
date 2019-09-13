@@ -1,9 +1,10 @@
 #pragma once
-#include "glm/vec3.hpp" 
+#include <glm/vec3.hpp>
 
 class Plane
 {
 public:
+	//TODO: private
 	const glm::vec3 Normal;
 	const float D;
 

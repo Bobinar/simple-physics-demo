@@ -1,6 +1,8 @@
 #pragma once
+
+#include <ShaderFactory.h>
+
 #include <GL/glew.h>
-#include "ShaderFactory.h"
 
 class Shader
 {

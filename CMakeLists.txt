@@ -9,7 +9,7 @@ include_directories(${SDL2_INCLUDE_DIR})
 include_directories(lib/glm)
 
 
-add_executable(Tutorial src/main.cpp)
+add_executable(Tutorial src/main.cpp src/QuadMesh.cpp src/SceneInitialization.cpp src/Frustum.cpp src/ShaderFactory.cpp src/SphereMesh.cpp src/SceneRenderer.cpp src/SceneSimulator.cpp src/SceneManager.cpp src/Sphere.cpp)
 
 find_package(OpenGL REQUIRED)
 include_directories(${GL_INCLUDE_DIRS})

@@ -9,11 +9,9 @@
 #include <GL/glew.h>
 #define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_opengl.h>
 
-#include "SceneManager.h"
-#include "SceneInitialization.h"
-#include "RenderConstants.h"
+#include <SceneManager.h>
+#include <SceneInitialization.h>
 
 
 SceneManager * g_sceneManager;
