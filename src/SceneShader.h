@@ -5,8 +5,12 @@
 namespace SceneShader
 {
 	GLbyte vertexShaderString[] =
+#ifdef __APPLE__
+		"#version 110\n"
+#else
 		"#version 100\n"
 		"precision highp float;\n"
+#endif
 		"uniform mat4 MVP;\n"
 		"uniform mat4 M;\n"
 		"uniform mat4 lightMVP;\n"
@@ -25,8 +29,12 @@ namespace SceneShader
 		"}														\n";
 
 	GLbyte fragmentShaderString[] =
+#ifdef __APPLE__
+		"#version 110\n"
+#else
 		"#version 100\n"
 		"precision highp float;\n"
+#endif
 		"uniform vec3 worldLightPosition;"
 		"varying vec3 worldNormal;\n"
 		"varying vec3 worldPosition;	\n"

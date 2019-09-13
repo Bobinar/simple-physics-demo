@@ -23,7 +23,6 @@ namespace
 	{
 		glGenTextures(1, &depthTexture);
 		glBindTexture(GL_TEXTURE_2D, depthTexture);
-		
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, RenderConstants::ShadowMapResolution, RenderConstants::ShadowMapResolution, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, 0);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -32,8 +31,19 @@ namespace
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 		glGenFramebuffers(1, &shadowMapFramebufferName);
+
 		glBindFramebuffer(GL_FRAMEBUFFER, shadowMapFramebufferName);
+
+#ifndef __EMSCRIPTEN__
+		glDrawBuffer(GL_NONE);
+		glReadBuffer(GL_NONE);
+#endif
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
+
+		if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+			printf("GL_FRAMEBUFFER_COMPLETE failed, CANNOT use FBO\n");
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 	SceneSimulator * CreateSimulator()
