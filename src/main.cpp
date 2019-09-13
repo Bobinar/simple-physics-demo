@@ -7,9 +7,10 @@
 #include <iostream>
 
 #include <GL/glew.h>
-#define SDL_MAIN_HANDLED
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_opengl.h>
+#include <GLFW/glfw3.h>
+//#define SDL_MAIN_HANDLED
+//#include <SDL2/SDL.h>
+//#include <SDL2/SDL_opengl.h>
 
 #include "SceneManager.h"
 #include "SceneInitialization.h"
@@ -59,6 +60,7 @@ void HandleMouseUp(int x, int y)
 
 void MainLoop()
 {
+    /*
 	SDL_Event e;
 	while (SDL_PollEvent(&e) != 0)
 	{
@@ -80,35 +82,59 @@ void MainLoop()
 			HandleMouseUp(x, y);
 		}
 	}
-
+    */
 	Update();
 	Draw();
 }
 
+static void error_callback(int error, const char* description)
+{
+    fprintf(stderr, "Error: %s\n", description);
+}
+
 int main(int argc, char *argv[])
 {
-	SDL_Window *window;
-	SDL_GLContext context;
+	//SDL_Window *window;
+    GLFWwindow* window;
+	//SDL_GLContext context;
 
+    glfwSetErrorCallback(error_callback);
+    /*
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
 		printf("Unable to initialize SDL: %s\n", SDL_GetError());
 		return 1;
-	}
+	}*/
+    if (!glfwInit())
+        exit(EXIT_FAILURE);
 
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1); 
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+
+/*	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
-
+*/
 	GLuint windowWidth = 800;
 	GLuint windowHeight = 800;
-	window = SDL_CreateWindow("Simple Physics Demo", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowWidth, windowHeight, SDL_WINDOW_OPENGL);
-	if (!window) {
+	//window = SDL_CreateWindow("Simple Physics Demo", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowWidth, windowHeight, SDL_WINDOW_OPENGL);
+    window = glfwCreateWindow(windowWidth, windowHeight, "Simple Physics Demo", NULL, NULL);
+
+
+    /*if (!window) {
 		printf("Unable to create window: %s\n", SDL_GetError());
 		return 1;
-	}
+	}*/
+    if (!window)
+    {
+        glfwTerminate();
+        exit(EXIT_FAILURE);
+    }
 
-	context = SDL_GL_CreateContext(window);
+	//context = SDL_GL_CreateContext(window);
+    glfwMakeContextCurrent(window);
+    //gladLoadGL(glfwGetProcAddress);
+    glfwSwapInterval(1);
 
 	g_previousTime = clock();
 	g_remainingTime = 0;
@@ -123,22 +149,32 @@ int main(int argc, char *argv[])
 
 	g_sceneManager = SceneInitialization::CreateScene(windowWidth, windowHeight);
 		
-	SDL_StartTextInput();
+	//SDL_StartTextInput();
 
 #if !defined(__EMSCRIPTEN__)
+    /*
 	while (!g_quit)
 	{
 		MainLoop();
 		SDL_GL_SwapWindow(window);
-	}
+	}*/
+    while (!glfwWindowShouldClose(window))
+    {
+        MainLoop();
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+    glfwDestroyWindow(window);
+
 #else
 	emscripten_set_main_loop(MainLoop, 0, 1);
 #endif
 
-	SDL_StopTextInput();
+//	SDL_StopTextInput();
 
 	delete g_sceneManager;
-	SDL_Quit();
+//	SDL_Quit();
 
-	return 0;
+    glfwTerminate();
+    exit(EXIT_SUCCESS);
 }
