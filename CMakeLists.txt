@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.1)
 project (Tutorial)
-include_directories(src)
+include_directories(include)
 
 set (CMAKE_CXX_STANDARD 11)
 
@@ -8,13 +8,10 @@ include_directories(${SDL2_INCLUDE_DIR})
 
 include_directories(lib/glm)
 
-
 add_executable(Tutorial src/main.cpp src/QuadMesh.cpp src/SceneInitialization.cpp src/Frustum.cpp src/ShaderFactory.cpp src/SphereMesh.cpp src/SceneRenderer.cpp src/SceneSimulator.cpp src/SceneManager.cpp src/Sphere.cpp)
 
 find_package(OpenGL REQUIRED)
 include_directories(${GL_INCLUDE_DIRS})
-
-
 
 if(CMAKE_CXX_COMPILER MATCHES "/em\\+\\+(-[a-zA-Z0-9.])?$")
 
