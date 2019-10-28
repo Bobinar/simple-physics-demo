@@ -61,16 +61,16 @@ void SceneSimulator::DetectAndResolveSphereSphereCollision(Sphere& sphereA, Sphe
 	sphereB.Speed += speedCorrectionB;
 }
 
-void SceneSimulator::Update(float deltaTime, std::vector<Sphere*> &spheres)
+void SceneSimulator::Update(float deltaTime, std::vector<std::unique_ptr<Sphere>> & spheres)
 {
-	for (std::vector<Sphere*>::iterator sphereIterator = spheres.begin(); sphereIterator != spheres.end(); ++sphereIterator)
+	for (std::vector<std::unique_ptr<Sphere>>::iterator sphereIterator = spheres.begin(); sphereIterator != spheres.end(); ++sphereIterator)
 	{
 		(*sphereIterator)->Update(deltaTime);
 	}
 
-	for (std::vector<Sphere*>::iterator sphereIteratorA = spheres.begin(); sphereIteratorA != spheres.end(); ++sphereIteratorA)
+	for (std::vector<std::unique_ptr<Sphere>>::iterator sphereIteratorA = spheres.begin(); sphereIteratorA != spheres.end(); ++sphereIteratorA)
 	{
-		for (std::vector<Sphere*>::iterator sphereIteratorB = sphereIteratorA + 1; sphereIteratorB != spheres.end(); ++sphereIteratorB)
+		for (std::vector<std::unique_ptr<Sphere>>::iterator sphereIteratorB = sphereIteratorA + 1; sphereIteratorB != spheres.end(); ++sphereIteratorB)
 		{
 			DetectAndResolveSphereSphereCollision(**sphereIteratorA, **sphereIteratorB);
 		}
@@ -78,7 +78,7 @@ void SceneSimulator::Update(float deltaTime, std::vector<Sphere*> &spheres)
 
 	for (std::vector<std::unique_ptr<Plane>>::const_iterator planeIterator = m_planes.begin(); planeIterator != m_planes.end(); ++planeIterator)
 	{
-		for (std::vector<Sphere*>::iterator sphereIterator = spheres.begin(); sphereIterator != spheres.end(); ++sphereIterator)
+		for (std::vector<std::unique_ptr<Sphere>>::iterator sphereIterator = spheres.begin(); sphereIterator != spheres.end(); ++sphereIterator)
 		{
 			DetectAndResolvePlaneSphereCollision(**planeIterator, **sphereIterator);
 		}

@@ -15,5 +15,5 @@ public:
 	void AddPlane(std::unique_ptr<Plane> plane);
 	void DetectAndResolvePlaneSphereCollision(const Plane& plane, Sphere & sphere);
 	void DetectAndResolveSphereSphereCollision(Sphere& sphereA, Sphere & sphereB);
-	void Update(float deltaTime, std::vector<Sphere*> &spheres);
+	void Update(float deltaTime, std::vector<std::unique_ptr<Sphere>> & spheres);
 };

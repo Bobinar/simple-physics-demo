@@ -10,6 +10,8 @@
 
 #include <GL/glew.h>
 
+#include <memory>
+
 class Drawable;
 class QuadMesh;
 class Shader;
@@ -53,8 +55,8 @@ public:
 	~SceneRenderer();
 
 	void Draw(const Shader &shader, glm::mat4 modelMatrix, Drawable * pDrawable) const;
-	void Draw(std::vector<Sphere*> &spheres) const;
-	void DrawShadowMap(std::vector<Sphere*> &spheres) const;
+	void Draw(std::vector<std::unique_ptr<Sphere>> & spheres) const;
+	void DrawShadowMap(std::vector<std::unique_ptr<Sphere>> & spheres) const;
 	glm::vec3 UnprojectScreenCoordinateAt(int x, int y);
 	bool IsInFrustum(glm::vec3 &position);
 };

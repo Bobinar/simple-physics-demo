@@ -1,7 +1,6 @@
 #include <SceneManager.h>
 
 #include <RenderConstants.h>
-#include <Sphere.h>
 
 SceneManager::SceneManager(SceneRenderer *pSceneRenderer, SceneSimulator *pSceneSimulator)
 : m_pSceneRenderer(pSceneRenderer)
@@ -14,10 +13,6 @@ SceneManager::~SceneManager()
 	delete m_pSceneRenderer;
 	delete m_pSceneSimulator;
 
-	for (std::vector<Sphere *>::iterator it = m_spheres.begin(); it != m_spheres.end(); ++it)
-	{
-		delete (*it);
-	}
 }
 
 void SceneManager::Update(float deltaTime)
@@ -29,7 +24,6 @@ void SceneManager::Update(float deltaTime)
 	{
 		if (!m_pSceneRenderer->IsInFrustum(m_spheres[i]->Position))
 		{
-			delete m_spheres[i];
 			m_spheres.erase(m_spheres.begin() + i);
 		}
 		else
@@ -44,16 +38,16 @@ void SceneManager::Draw()
 	m_pSceneRenderer->Draw(m_spheres);
 }
 
-void SceneManager::AddSphere(Sphere * pSphere)
+void SceneManager::AddSphere(std::unique_ptr<Sphere> pSphere)
 {
-	m_spheres.push_back(pSphere);
+	m_spheres.push_back(std::move(pSphere));
 }
 
 void SceneManager::ShootSphere(int x, int y)
 {
 	glm::vec3 position = m_pSceneRenderer->UnprojectScreenCoordinateAt(x, y);
 	glm::vec3 speed = glm::vec3(0, 0, -1);
-	Sphere * pSphere = new Sphere(position, RenderConstants::SphereRadius);
+	std::unique_ptr<Sphere> pSphere = std::make_unique<Sphere>(position, RenderConstants::SphereRadius);
 	pSphere->Speed = speed;
-	AddSphere(pSphere);
+	AddSphere(std::move(pSphere));
 }
