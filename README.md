@@ -9,7 +9,7 @@ Needs refactoring and moving code from .h files to .cpp
 To run this project in a web browser, compile with emscripten by running "SDLExperiment/build_emscripten.bat".
 You can get emscripten at http://emscripten.org/
 
-The only included build mechanisms at the moment are a Visual Studio Community 2015 solution and the batch file to build on emscripten.
+Project can be generated with cmake. Tested on Windows, OSX and linux.
 
 Using libraries:
 + OpenGL Mathematics (GLM): http://glm.g-truc.net/
