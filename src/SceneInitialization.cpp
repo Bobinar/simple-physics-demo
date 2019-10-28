@@ -18,6 +18,7 @@
 #include <glm/gtc/constants.hpp>
 
 #include <iostream>
+#include <memory>
 
 namespace
 {
@@ -59,8 +60,8 @@ namespace
 	{
 		SceneSimulator * pSceneSimulator = new SceneSimulator();
 
-		pSceneSimulator->AddPlane(new Plane(glm::vec3(0, 1, 0), 0));
-		pSceneSimulator->AddPlane(new Plane(glm::vec3(0, 0, 1), 0));
+		pSceneSimulator->AddPlane(std::make_unique<Plane>(glm::vec3(0, 1, 0), 0));
+		pSceneSimulator->AddPlane(std::make_unique<Plane>(glm::vec3(0, 0, 1), 0));
 
 		return pSceneSimulator;
 	}

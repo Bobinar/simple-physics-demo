@@ -1,22 +1,13 @@
 #include <SceneSimulator.h>
 
 #include <IntersectionTests.h>
-#include <Plane.h>
 #include <Sphere.h>
 
 #include <glm/vec3.hpp>
 
-SceneSimulator::~SceneSimulator()
+void SceneSimulator::AddPlane(std::unique_ptr<Plane> plane)
 {
-	for (std::vector<Plane *>::iterator it = m_planes.begin(); it != m_planes.end(); ++it)
-	{
-		delete (*it);
-	}
-}
-
-void SceneSimulator::AddPlane(Plane * plane)
-{
-	m_planes.push_back(plane);
+	m_planes.push_back(std::move(plane));
 }
 
 void SceneSimulator::DetectAndResolvePlaneSphereCollision(Plane& plane, Sphere & sphere)
@@ -72,24 +63,24 @@ void SceneSimulator::DetectAndResolveSphereSphereCollision(Sphere& sphereA, Sphe
 
 void SceneSimulator::Update(float deltaTime, std::vector<Sphere*> &spheres)
 {
-	for (std::vector<Sphere*>::iterator it = spheres.begin(); it != spheres.end(); ++it)
+	for (std::vector<Sphere*>::iterator sphereIterator = spheres.begin(); sphereIterator != spheres.end(); ++sphereIterator)
 	{
-		(*it)->Update(deltaTime);
+		(*sphereIterator)->Update(deltaTime);
 	}
 
-	for (std::vector<Sphere*>::iterator itA = spheres.begin(); itA != spheres.end(); ++itA)
+	for (std::vector<Sphere*>::iterator sphereIteratorA = spheres.begin(); sphereIteratorA != spheres.end(); ++sphereIteratorA)
 	{
-		for (std::vector<Sphere*>::iterator itB = itA + 1; itB != spheres.end(); ++itB)
+		for (std::vector<Sphere*>::iterator sphereIteratorB = sphereIteratorA + 1; sphereIteratorB != spheres.end(); ++sphereIteratorB)
 		{
-			DetectAndResolveSphereSphereCollision(**itA, **itB);
+			DetectAndResolveSphereSphereCollision(**sphereIteratorA, **sphereIteratorB);
 		}
 	}
 
-	for (std::vector<Plane*>::iterator itA = m_planes.begin(); itA != m_planes.end(); ++itA)
+	for (std::vector<std::unique_ptr<Plane>>::iterator planeIterator = m_planes.begin(); planeIterator != m_planes.end(); ++planeIterator)
 	{
-		for (std::vector<Sphere*>::iterator itB = spheres.begin(); itB != spheres.end(); ++itB)
+		for (std::vector<Sphere*>::iterator sphereIterator = spheres.begin(); sphereIterator != spheres.end(); ++sphereIterator)
 		{
-			DetectAndResolvePlaneSphereCollision(**itA, **itB);
+			DetectAndResolvePlaneSphereCollision(**planeIterator, **sphereIterator);
 		}
 	}
 }
