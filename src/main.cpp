@@ -3,12 +3,13 @@
 #endif
 
 #include <stdio.h>
+#include <chrono>
 #include <time.h>
 #include <iostream>
 
 #include <GL/glew.h>
 #define SDL_MAIN_HANDLED
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 #include <SceneManager.h>
 #include <SceneInitialization.h>
