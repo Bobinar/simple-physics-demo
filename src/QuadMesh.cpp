@@ -6,7 +6,7 @@
 
 QuadMesh::QuadMesh(float halfWidth, float z)
 {
-	static const GLfloat g_vertex_buffer_data[] = {
+	GLfloat g_vertex_buffer_data[] = {
 			-halfWidth,-halfWidth,z,
 			halfWidth,-halfWidth,z,
 			-halfWidth, halfWidth,z,
