@@ -10,7 +10,7 @@ void SceneSimulator::AddPlane(std::unique_ptr<Plane> plane)
 	m_planes.push_back(std::move(plane));
 }
 
-void SceneSimulator::DetectAndResolvePlaneSphereCollision(Plane& plane, Sphere & sphere)
+void SceneSimulator::DetectAndResolvePlaneSphereCollision(const Plane& plane, Sphere & sphere)
 {
 	float distanceToPlane = IntersectionTests::DistPointPlane(sphere.Position, plane);
 	if (distanceToPlane > sphere.Radius)
@@ -76,7 +76,7 @@ void SceneSimulator::Update(float deltaTime, std::vector<Sphere*> &spheres)
 		}
 	}
 
-	for (std::vector<std::unique_ptr<Plane>>::iterator planeIterator = m_planes.begin(); planeIterator != m_planes.end(); ++planeIterator)
+	for (std::vector<std::unique_ptr<Plane>>::const_iterator planeIterator = m_planes.begin(); planeIterator != m_planes.end(); ++planeIterator)
 	{
 		for (std::vector<Sphere*>::iterator sphereIterator = spheres.begin(); sphereIterator != spheres.end(); ++sphereIterator)
 		{
