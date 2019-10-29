@@ -66,8 +66,8 @@ namespace
 	{
 		auto pSceneSimulator = std::make_unique<SceneSimulator>();
 
-		pSceneSimulator->AddPlane(std::make_unique<Plane>(glm::vec3(0, 1, 0), 0.0f));
-		pSceneSimulator->AddPlane(std::make_unique<Plane>(glm::vec3(0, 0, 1), 0.0f));
+		pSceneSimulator->AddPlane(Plane(glm::vec3(0, 1, 0), 0.0f));
+		pSceneSimulator->AddPlane(Plane(glm::vec3(0, 0, 1), 0.0f));
 
 		return pSceneSimulator;
 	}

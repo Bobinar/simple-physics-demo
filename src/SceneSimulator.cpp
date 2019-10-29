@@ -5,9 +5,9 @@
 
 #include <glm/vec3.hpp>
 
-void SceneSimulator::AddPlane(std::unique_ptr<Plane> plane)
+void SceneSimulator::AddPlane(const Plane& plane)
 {
-	m_planes.push_back(std::move(plane));
+	m_planes.push_back(plane);
 }
 
 void SceneSimulator::DetectAndResolvePlaneSphereCollision(const Plane& plane,
@@ -86,14 +86,14 @@ void SceneSimulator::Update(float deltaTime, std::vector<Sphere>& spheres)
 		}
 	}
 
-	for (std::vector<std::unique_ptr<Plane>>::const_iterator planeIterator =
+	for (std::vector<Plane>::const_iterator planeIterator =
 			 m_planes.begin();
 		 planeIterator != m_planes.end(); ++planeIterator)
 	{
 		for (std::vector<Sphere>::iterator sphereIterator = spheres.begin();
 			 sphereIterator != spheres.end(); ++sphereIterator)
 		{
-			DetectAndResolvePlaneSphereCollision(**planeIterator, *sphereIterator);
+			DetectAndResolvePlaneSphereCollision(*planeIterator, *sphereIterator);
 		}
 	}
 }

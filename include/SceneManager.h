@@ -1,11 +1,12 @@
 #pragma once
 
-#include <SceneRenderer.h>
-#include <SceneSimulator.h>
 #include <Sphere.h>
 
 #include <vector>
 #include <memory>
+
+class SceneRenderer;
+class SceneSimulator;
 
 class SceneManager
 {
@@ -15,6 +16,7 @@ class SceneManager
 
 public:
 	SceneManager(std::unique_ptr<SceneRenderer>&& pSceneRenderer, std::unique_ptr<SceneSimulator>&& pSceneSimulator);
+	~SceneManager();
 	void Update(float deltaTime);
 	void Draw();
 	void AddSphere(const Sphere& pSphere);

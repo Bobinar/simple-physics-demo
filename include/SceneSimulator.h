@@ -9,10 +9,10 @@ class Sphere;
 class SceneSimulator
 {
 private:
-	std::vector<std::unique_ptr<Plane>> m_planes;
+	std::vector<Plane> m_planes;
 
 public:
-	void AddPlane(std::unique_ptr<Plane> plane);
+	void AddPlane(const Plane& plane);
 	void DetectAndResolvePlaneSphereCollision(const Plane& plane, Sphere& sphere);
 	void DetectAndResolveSphereSphereCollision(Sphere& sphereA, Sphere& sphereB);
 	void Update(float deltaTime, std::vector<Sphere>& spheres);
