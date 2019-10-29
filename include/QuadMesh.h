@@ -16,4 +16,3 @@ public:
 	~QuadMesh();
 	void Draw() const;
 };
-

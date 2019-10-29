@@ -10,7 +10,7 @@ class Shader
 public:
 	GLuint ProgramObject;
 
-	Shader(GLbyte *vertexShaderString, GLbyte *fragmentShaderString)
+	Shader(GLbyte* vertexShaderString, GLbyte* fragmentShaderString)
 	{
 		ProgramObject = ShaderFactory::CompileShader(vertexShaderString, fragmentShaderString);
 	}

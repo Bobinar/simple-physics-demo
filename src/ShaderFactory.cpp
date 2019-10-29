@@ -7,7 +7,7 @@
 
 namespace
 {
-	GLuint LoadShader(GLenum type, const char *shaderSrc)
+	GLuint LoadShader(GLenum type, const char* shaderSrc)
 	{
 		GLuint shader;
 		GLint compiled;
@@ -44,19 +44,20 @@ namespace
 		}
 		return shader;
 	}
-}
+} // namespace
 
 namespace ShaderFactory
 {
-	GLuint CompileShader(GLbyte *vertexShaderString, GLbyte *fragmentShaderString)
+	GLuint CompileShader(GLbyte* vertexShaderString, GLbyte* fragmentShaderString)
 	{
 		GLuint vertexShader;
 		GLuint fragmentShader;
 		GLuint programObject;
 		GLint linked;
 
-		vertexShader = LoadShader(GL_VERTEX_SHADER, (const char *)vertexShaderString);
-		fragmentShader = LoadShader(GL_FRAGMENT_SHADER, (const char *)fragmentShaderString);
+		vertexShader = LoadShader(GL_VERTEX_SHADER, (const char*)vertexShaderString);
+		fragmentShader =
+			LoadShader(GL_FRAGMENT_SHADER, (const char*)fragmentShaderString);
 
 		programObject = glCreateProgram();
 
@@ -65,8 +66,10 @@ namespace ShaderFactory
 		glAttachShader(programObject, vertexShader);
 		glAttachShader(programObject, fragmentShader);
 
-		glBindAttribLocation(programObject, RenderConstants::PositionAttributeLocation, "vPosition");
-		glBindAttribLocation(programObject, RenderConstants::NormalAttributeLocation, "vNormal");
+		glBindAttribLocation(programObject,
+							 RenderConstants::PositionAttributeLocation, "vPosition");
+		glBindAttribLocation(programObject, RenderConstants::NormalAttributeLocation,
+							 "vNormal");
 
 		glLinkProgram(programObject);
 
@@ -93,4 +96,4 @@ namespace ShaderFactory
 		}
 		return programObject;
 	}
-}
+} // namespace ShaderFactory

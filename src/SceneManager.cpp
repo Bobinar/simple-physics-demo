@@ -2,11 +2,10 @@
 
 #include <RenderConstants.h>
 
-SceneManager::SceneManager(std::unique_ptr<SceneRenderer> &&pSceneRenderer, std::unique_ptr<SceneSimulator> &&pSceneSimulator)
-: m_pSceneRenderer(std::move(pSceneRenderer))
-, m_pSceneSimulator(std::move(pSceneSimulator))
-{
-}
+SceneManager::SceneManager(std::unique_ptr<SceneRenderer>&& pSceneRenderer,
+						   std::unique_ptr<SceneSimulator>&& pSceneSimulator)
+	: m_pSceneRenderer(std::move(pSceneRenderer)),
+	  m_pSceneSimulator(std::move(pSceneSimulator)) {}
 
 void SceneManager::Update(float deltaTime)
 {
@@ -26,12 +25,9 @@ void SceneManager::Update(float deltaTime)
 	}
 }
 
-void SceneManager::Draw()
-{
-	m_pSceneRenderer->Draw(m_spheres);
-}
+void SceneManager::Draw() { m_pSceneRenderer->Draw(m_spheres); }
 
-void SceneManager::AddSphere(const Sphere & pSphere)
+void SceneManager::AddSphere(const Sphere& pSphere)
 {
 	m_spheres.push_back(pSphere);
 }

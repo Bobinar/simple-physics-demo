@@ -1,12 +1,7 @@
 #include <Sphere.h>
 
-Sphere::Sphere(const glm::vec3 &position, float radius)
-		: Position(position)
-		, Radius(radius)
-		, m_mass(1.0f)
-		, Speed(0,0,0)
-{
-}
+Sphere::Sphere(const glm::vec3& position, float radius)
+	: Position(position), Radius(radius), m_mass(1.0f), Speed(0, 0, 0) {}
 
 void Sphere::Update(float deltaTime)
 {

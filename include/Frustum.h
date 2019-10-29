@@ -9,7 +9,8 @@ class Plane;
 class Frustum
 {
 	std::vector<Plane*> m_planes;
+
 public:
 	Frustum(glm::mat4 mat);
-	bool IsInFrustum(glm::vec3 &point) const;
+	bool IsInFrustum(glm::vec3& point) const;
 };

@@ -12,7 +12,6 @@ public:
 	glm::vec3 Position;
 	float Radius;
 
-	Sphere(const glm::vec3 &position, float radius);
+	Sphere(const glm::vec3& position, float radius);
 	void Update(float deltaTime);
-
 };

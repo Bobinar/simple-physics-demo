@@ -4,5 +4,5 @@
 
 namespace ShaderFactory
 {
-	GLuint CompileShader(GLbyte *vertexShaderString, GLbyte *fragmentShaderString);
+	GLuint CompileShader(GLbyte* vertexShaderString, GLbyte* fragmentShaderString);
 }
