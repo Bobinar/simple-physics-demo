@@ -83,10 +83,10 @@ namespace SceneInitialization
 		InitializeShadowMapTextureAndFramebuffer(depthTexture,
 												 shadowMapFramebufferName);
 
-		Shader* pSceneShader = new Shader(SceneShader::vertexShaderString,
-										  SceneShader::fragmentShaderString);
-		Shader* pDepthShader = new Shader(ShadowMapShader::vertexShaderString,
-										  ShadowMapShader::fragmentShaderString);
+		std::unique_ptr<Shader> pSceneShader = std::make_unique<Shader>(SceneShader::vertexShaderString,
+																		SceneShader::fragmentShaderString);
+		std::unique_ptr<Shader> pDepthShader = std::make_unique<Shader>(ShadowMapShader::vertexShaderString,
+																		ShadowMapShader::fragmentShaderString);
 
 		const glm::vec3 CameraPostion(0, 2, 5);
 		const glm::vec3 CameraLookAt(0, 0.5f, 0);
@@ -120,17 +120,17 @@ namespace SceneInitialization
 		Sphere sphere(SphereStartPosition, RenderConstants::SphereRadius);
 
 		const int SphereMeshRingsAndSectors = 20;
-		SphereMesh* pSphereMesh =
-			new SphereMesh(RenderConstants::SphereRadius, SphereMeshRingsAndSectors,
-						   SphereMeshRingsAndSectors);
+		std::unique_ptr<SphereMesh> pSphereMesh =
+			std::make_unique<SphereMesh>(RenderConstants::SphereRadius, SphereMeshRingsAndSectors,
+										 SphereMeshRingsAndSectors);
 
 		const float QuadHalfWidth = 3;
 		const float QuadZ = 0;
-		QuadMesh* pQuadMesh = new QuadMesh(QuadHalfWidth, QuadZ);
+		std::unique_ptr<QuadMesh> pQuadMesh = std::make_unique<QuadMesh>(QuadHalfWidth, QuadZ);
 
 		std::unique_ptr<SceneRenderer> pSceneRenderer =
 			std::make_unique<SceneRenderer>(
-				width, height, pSceneShader, pDepthShader, pQuadMesh, pSphereMesh,
+				width, height, std::move(pSceneShader), std::move(pDepthShader), std::move(pQuadMesh), std::move(pSphereMesh),
 				viewMatrix, projectionMatrix, m_lightSpaceViewProjectionMatrix,
 				lightPosition, depthTexture, shadowMapFramebufferName);
 

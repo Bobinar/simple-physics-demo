@@ -2,6 +2,7 @@
 
 #include <Frustum.h>
 
+
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -22,11 +23,11 @@ class SceneRenderer
 {
 private:
 	const GLuint m_width, m_height;
-	const Shader* m_pSceneShader;
-	const Shader* m_pDepthShader;
+	std::unique_ptr<Shader> m_pSceneShader;
+	std::unique_ptr<Shader> m_pDepthShader;
 	const glm::mat4 m_viewMatrix, m_projectionMatrix;
-	QuadMesh* m_pQuadMesh;
-	SphereMesh* m_pSphereMesh;
+	std::unique_ptr<QuadMesh> m_pQuadMesh;
+	std::unique_ptr<SphereMesh> m_pSphereMesh;
 	Frustum m_frustum;
 
 	const glm::vec3 m_lightPosition;
@@ -41,10 +42,10 @@ public:
 	SceneRenderer(
 		GLuint width,
 		GLuint height,
-		const Shader* pSceneShader,
-		const Shader* pDepthShader,
-		QuadMesh* pQuadMesh,
-		SphereMesh* pSphereMesh,
+		std::unique_ptr<Shader>&& pSceneShader,
+		std::unique_ptr<Shader>&& pDepthShader,
+		std::unique_ptr<QuadMesh>&& pQuadMesh,
+		std::unique_ptr<SphereMesh>&& pSphereMesh,
 		const glm::mat4& viewMatrix,
 		const glm::mat4& projectionMatrix,
 		const glm::mat4& lightSpaceViewProjectionMatrix,
@@ -53,7 +54,7 @@ public:
 		GLuint shadowMapFramebufferName);
 	~SceneRenderer();
 
-	void Draw(const Shader& shader, glm::mat4 modelMatrix, Drawable* pDrawable) const;
+	void Draw(const Shader& shader, glm::mat4 modelMatrix, Drawable& pDrawable) const;
 	void Draw(std::vector<Sphere>& spheres) const;
 	void DrawShadowMap(std::vector<Sphere>& spheres) const;
 	glm::vec3 UnprojectScreenCoordinateAt(int x, int y);
