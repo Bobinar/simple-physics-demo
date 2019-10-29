@@ -60,8 +60,8 @@ namespace
 	{
 		SceneSimulator * pSceneSimulator = new SceneSimulator();
 
-		pSceneSimulator->AddPlane(std::make_unique<Plane>(glm::vec3(0, 1, 0), 0));
-		pSceneSimulator->AddPlane(std::make_unique<Plane>(glm::vec3(0, 0, 1), 0));
+		pSceneSimulator->AddPlane(std::make_unique<Plane>(glm::vec3(0, 1, 0), 0.0f));
+		pSceneSimulator->AddPlane(std::make_unique<Plane>(glm::vec3(0, 0, 1), 0.0f));
 
 		return pSceneSimulator;
 	}
@@ -105,7 +105,7 @@ namespace SceneInitialization
 		glm::mat4 m_lightSpaceViewProjectionMatrix = depthProjectionMatrix * depthViewMatrix;
 
 		const glm::vec3 SphereStartPosition(0.0f, 1.0f, 0.25f);
-		std::unique_ptr<Sphere> pSphere = std::make_unique<Sphere>(SphereStartPosition, RenderConstants::SphereRadius);
+		Sphere sphere(SphereStartPosition, RenderConstants::SphereRadius);
 
 		const int SphereMeshRingsAndSectors = 20;
 		SphereMesh * pSphereMesh = new SphereMesh(RenderConstants::SphereRadius, SphereMeshRingsAndSectors, SphereMeshRingsAndSectors);
@@ -132,7 +132,7 @@ namespace SceneInitialization
 
 		SceneManager * pSceneManager = new SceneManager(pSceneRenderer, pSceneSimulator);
 
-		pSceneManager->AddSphere(std::move(pSphere));
+		pSceneManager->AddSphere(sphere);
 
 		return pSceneManager;
 	}
