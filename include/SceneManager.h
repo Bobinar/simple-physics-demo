@@ -9,13 +9,12 @@
 
 class SceneManager
 {
-	SceneRenderer * m_pSceneRenderer;
-	SceneSimulator * m_pSceneSimulator;
+	std::unique_ptr<SceneRenderer> m_pSceneRenderer;
+	std::unique_ptr<SceneSimulator> m_pSceneSimulator;
 	std::vector<Sphere> m_spheres;
 
 public:
-	SceneManager(SceneRenderer *pSceneRenderer, SceneSimulator *pSceneSimulator);
-	~SceneManager();
+	SceneManager(std::unique_ptr<SceneRenderer> && pSceneRenderer, std::unique_ptr<SceneSimulator> && pSceneSimulator);
 	void Update(float deltaTime);	void Draw();
 	void AddSphere(const Sphere & pSphere);
 	void ShootSphere(int x, int y);

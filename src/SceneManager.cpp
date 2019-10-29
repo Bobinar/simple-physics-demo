@@ -2,17 +2,10 @@
 
 #include <RenderConstants.h>
 
-SceneManager::SceneManager(SceneRenderer *pSceneRenderer, SceneSimulator *pSceneSimulator)
-: m_pSceneRenderer(pSceneRenderer)
-, m_pSceneSimulator(pSceneSimulator)
+SceneManager::SceneManager(std::unique_ptr<SceneRenderer> &&pSceneRenderer, std::unique_ptr<SceneSimulator> &&pSceneSimulator)
+: m_pSceneRenderer(std::move(pSceneRenderer))
+, m_pSceneSimulator(std::move(pSceneSimulator))
 {
-}
-
-SceneManager::~SceneManager()
-{
-	delete m_pSceneRenderer;
-	delete m_pSceneSimulator;
-
 }
 
 void SceneManager::Update(float deltaTime)

@@ -24,7 +24,7 @@ SceneRenderer::SceneRenderer(
 GLuint height,
 const Shader* pSceneShader,
 const Shader* pDepthShader,
-		QuadMesh * pQuadMesh,
+QuadMesh * pQuadMesh,
 SphereMesh * pSphereMesh,
 const glm::mat4 &viewMatrix,
 const glm::mat4 &projectionMatrix,

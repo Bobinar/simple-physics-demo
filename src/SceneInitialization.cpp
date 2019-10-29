@@ -56,9 +56,9 @@ namespace
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	SceneSimulator * CreateSimulator()
+	std::unique_ptr<SceneSimulator> CreateSimulator()
 	{
-		SceneSimulator * pSceneSimulator = new SceneSimulator();
+		auto pSceneSimulator = std::make_unique<SceneSimulator>();
 
 		pSceneSimulator->AddPlane(std::make_unique<Plane>(glm::vec3(0, 1, 0), 0.0f));
 		pSceneSimulator->AddPlane(std::make_unique<Plane>(glm::vec3(0, 0, 1), 0.0f));
@@ -114,7 +114,7 @@ namespace SceneInitialization
 		const float QuadZ = 0;
 		QuadMesh * pQuadMesh = new QuadMesh(QuadHalfWidth, QuadZ);
 
-		SceneRenderer * pSceneRenderer = new SceneRenderer(
+		std::unique_ptr<SceneRenderer> pSceneRenderer = std::make_unique<SceneRenderer>(
 				width,
 				height,
 				pSceneShader,
@@ -128,9 +128,9 @@ namespace SceneInitialization
 				depthTexture,
 				shadowMapFramebufferName);
 
-		SceneSimulator * pSceneSimulator = CreateSimulator();
+		std::unique_ptr<SceneSimulator> pSceneSimulator = CreateSimulator();
 
-		SceneManager * pSceneManager = new SceneManager(pSceneRenderer, pSceneSimulator);
+		SceneManager * pSceneManager = new SceneManager(std::move(pSceneRenderer), std::move(pSceneSimulator));
 
 		pSceneManager->AddSphere(sphere);
 
