@@ -88,7 +88,7 @@ SphereMesh::SphereMesh(float radius, unsigned int rings, unsigned int sectors)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indicesBuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLushort),
 				 indices.data(), GL_STATIC_DRAW);
-	m_indicesCount = indices.size();
+	m_indicesCount = static_cast<int>(indices.size());
 }
 
 SphereMesh::~SphereMesh()
