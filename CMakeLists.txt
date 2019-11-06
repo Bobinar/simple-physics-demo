@@ -24,7 +24,7 @@ else()
 		file(COPY ${CMAKE_CURRENT_LIST_DIR}/lib/glew-1.13.0/bin/Release/x64/glew32.dll DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 	endif()
 
-	find_package(GLEW REQUIRED)
+	find_package(GLEW 1.13.0 REQUIRED)
 	include_directories(${GLEW_INCLUDE_DIRS})
 
 	if (WIN32)
